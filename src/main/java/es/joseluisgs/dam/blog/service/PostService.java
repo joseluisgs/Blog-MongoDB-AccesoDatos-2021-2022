@@ -7,10 +7,10 @@ import es.joseluisgs.dam.blog.repository.PostRepository;
 import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     PostMapper mapper = new PostMapper();
@@ -49,8 +49,12 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
         return mapper.toDTO(post);
     }
 
-    public List<PostDTO> getPostsByUserId(Long userId) {
+    public List<PostDTO> getPostsByUserId(ObjectId userId) {
         // Obtenemos la lista
         return mapper.toDTO(repository.getByUserId(userId));
+    }
+
+    public Set<Post> getMyPosts(ObjectId userId) {
+        return new HashSet(repository.getByUserId(userId));
     }
 }

@@ -1,8 +1,10 @@
 package es.joseluisgs.dam.blog;
 
 import es.joseluisgs.dam.blog.controller.CategoryController;
+import es.joseluisgs.dam.blog.controller.UserController;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
+import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Post;
@@ -242,7 +244,6 @@ public class Blog {
 
         System.out.println("FIN CATEGORIAS");
     }
-      /*
 
     public void Users() {
         System.out.println("INICIO USUARIOS");
@@ -293,7 +294,7 @@ public class Blog {
 
         System.out.println("FIN USUARIOS");
     }
-
+    /*
 
 
     public void Login() {

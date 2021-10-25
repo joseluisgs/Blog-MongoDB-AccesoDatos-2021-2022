@@ -85,11 +85,11 @@ public class PostRepository implements CrudRespository<Post, ObjectId> {
         }
     }
 
-    public List<Post> getByUserId(Long userId) {
+    public List<Post> getByUserId(ObjectId userId) {
         MongoDBController mongoController = MongoDBController.getInstance();
         mongoController.open();
         MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
-        List<Post> list = postCollection.find(eq("user_id", userId)).into(new ArrayList<Post>());
+        List<Post> list = postCollection.find(eq("user", userId)).into(new ArrayList<Post>());
         mongoController.close();
         return list;
     }
