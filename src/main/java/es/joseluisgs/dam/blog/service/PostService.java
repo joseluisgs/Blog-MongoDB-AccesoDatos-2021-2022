@@ -126,7 +126,7 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
         Set<Comment> comentarios = commentService.getPostComments(post.getId());
         // Recorremos cada comentario y lo borramos
         comentarios.forEach(c-> {
-            // Refactorizar que al eliminar comentario lo elimine el comentario del autor
+            // TODO Refactorizar que al eliminar comentario lo elimine el comentario del autor
             try {
                 commentService.deleteCommentByID(c.getId());
             } catch (SQLException e) {
