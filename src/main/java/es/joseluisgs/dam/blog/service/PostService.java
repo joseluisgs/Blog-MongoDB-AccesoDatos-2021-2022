@@ -4,13 +4,14 @@ import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.mapper.PostMapper;
 import es.joseluisgs.dam.blog.repository.PostRepository;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-public class PostService extends BaseService<Post, Long, PostRepository> {
+public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     PostMapper mapper = new PostMapper();
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
@@ -26,7 +27,7 @@ public class PostService extends BaseService<Post, Long, PostRepository> {
         return mapper.toDTO(this.findAll());
     }
 
-    public PostDTO getPostById(Long id) throws SQLException {
+    public PostDTO getPostById(ObjectId id) throws SQLException {
         return mapper.toDTO(this.getById(id));
     }
 

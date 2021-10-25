@@ -5,12 +5,13 @@ import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.mapper.UserMapper;
 import es.joseluisgs.dam.blog.repository.UserRepository;
 import es.joseluisgs.dam.blog.utils.Cifrador;
+import org.bson.types.ObjectId;
 
 import java.util.Date;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserService extends BaseService<User, Long, UserRepository> {
+public class UserService extends BaseService<User, ObjectId, UserRepository> {
     UserMapper mapper = new UserMapper();
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
@@ -25,7 +26,7 @@ public class UserService extends BaseService<User, Long, UserRepository> {
         return mapper.toDTO(this.findAll());
     }
 
-    public UserDTO getUserById(Long id) throws SQLException {
+    public UserDTO getUserById(ObjectId id) throws SQLException {
         return mapper.toDTO(this.getById(id));
     }
 

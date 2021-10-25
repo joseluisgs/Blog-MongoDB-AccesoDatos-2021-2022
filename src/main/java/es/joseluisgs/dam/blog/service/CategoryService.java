@@ -4,11 +4,12 @@ import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
 import es.joseluisgs.dam.blog.mapper.CategoryMapper;
 import es.joseluisgs.dam.blog.repository.CategoryRepository;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class CategoryService extends BaseService<Category, Long, CategoryRepository> {
+public class CategoryService extends BaseService<Category, ObjectId, CategoryRepository> {
     CategoryMapper mapper = new CategoryMapper();
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
@@ -24,7 +25,7 @@ public class CategoryService extends BaseService<Category, Long, CategoryReposit
         return mapper.toDTO(this.findAll());
     }
 
-    public CategoryDTO getCategoryById(Long id) throws SQLException {
+    public CategoryDTO getCategoryById(ObjectId id) throws SQLException {
         return mapper.toDTO(this.getById(id));
     }
 

@@ -4,19 +4,20 @@ import com.mongodb.client.MongoCollection;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.model.Login;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class LoginRepository implements CrudRespository<Login, Long> {
+public class LoginRepository implements CrudRespository<Login, ObjectId> {
     @Override
     public List<Login> findAll() throws SQLException {
         throw new SQLException("Error: Método findAll no implementado");
     }
 
     @Override
-    public Login getById(Long aLong) throws SQLException {
+    public Login getById(ObjectId aLong) throws SQLException {
         throw new SQLException("Error: Método getById  no implementado");
     }
 

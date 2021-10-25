@@ -1,19 +1,22 @@
 package es.joseluisgs.dam.blog;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.Mongo;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import es.joseluisgs.dam.blog.controller.*;
+import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.dto.*;
-import es.joseluisgs.dam.blog.manager.HibernateController;
 import es.joseluisgs.dam.blog.mapper.PostMapper;
 import es.joseluisgs.dam.blog.mapper.UserMapper;
+import es.joseluisgs.dam.blog.repository.CategoryRepository;
 
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,24 +39,23 @@ public class Blog {
         // Borramos los datos previos
         removeData();
 
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
-        // Categorías
-         hc.getTransaction().begin();
-        Category c1 = new Category("General"); // 1
-        Category c2 = new Category("Dudas");  // 2
-        Category c3 = new Category("Evaluación"); // 3
-        Category c4 = new Category("Pruebas"); // 4
-
-        hc.getManager().persist(c1);
-        hc.getManager().persist(c2);
-        hc.getManager().persist(c3);
-        hc.getManager().persist(c4);
-
-        hc.getTransaction().commit();
+            // Categorías
+        CategoryRepository categoryRepository = new CategoryRepository();
+        Category c1 = new Category("General");
+        Category c2 = new Category("Dudas");
+        Category c3 = new Category("Evaluación");
+        Category c4 = new Category("Pruebas");
+        try {
+            categoryRepository.save(c1);
+            categoryRepository.save(c2);
+            categoryRepository.save(c3);
+            categoryRepository.save(c4);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // Usuarios
-        System.out.println("Insertando Usuarios de Ejemplo");
+/*        System.out.println("Insertando Usuarios de Ejemplo");
 
         hc.getTransaction().begin();
         User u1 = new User("Pepe Perez","pepe@pepe.es","1234"); // 5
@@ -112,26 +114,18 @@ public class Blog {
 
         hc.getTransaction().commit();
 
-        hc.close();
+        hc.close();*/
 
     }
 
     private void removeData() {
-        // Usando Hibernate
-//        transactionManager.begin();
-//        // Collection == name of the class being saved ⮧
-//        entityManager.createNativeQuery("db.GameCharacter.drop()").executeUpdate();
-//        transactionManager.commit();
-        // Lo sutyo sería un controlador
-        ConnectionString connectionString = new ConnectionString("mongodb://mongoadmin:mongopass@localhost/test?authSource=admin");
-        MongoClient mongoClient = MongoClients.create(connectionString);
-
-       // Obtenemos la base de datos que necesitamos
-        MongoDatabase blogDB = mongoClient.getDatabase("blog");
-        blogDB.drop(); // Si queremos borrar toda la base de datos
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        mongoController.removeDataBase("blog");
+        mongoController.close();
     }
 
-    public void Categories() {
+   /* public void Categories() {
         System.out.println("INICIO CATEGORIAS");
 
         CategoryController categoryController = CategoryController.getInstance();
@@ -416,5 +410,5 @@ public class Blog {
         System.out.println(userController.deleteUser(userMapper.toDTO(user)));
 
         System.out.println("FIN COMENTARIOS");
-    }
+    }*/
 }

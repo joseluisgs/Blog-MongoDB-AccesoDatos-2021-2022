@@ -7,6 +7,7 @@ import es.joseluisgs.dam.blog.mapper.LoginMapper;
 import es.joseluisgs.dam.blog.repository.LoginRepository;
 import es.joseluisgs.dam.blog.repository.UserRepository;
 import es.joseluisgs.dam.blog.utils.Cifrador;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -14,7 +15,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-public class LoginService extends BaseService<Login, Long, LoginRepository> {
+public class LoginService extends BaseService<Login, ObjectId, LoginRepository> {
     LoginMapper mapper = new LoginMapper();
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
