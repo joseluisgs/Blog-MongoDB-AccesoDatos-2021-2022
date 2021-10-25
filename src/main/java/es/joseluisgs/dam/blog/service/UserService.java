@@ -1,6 +1,5 @@
 package es.joseluisgs.dam.blog.service;
 
-import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.mapper.UserMapper;
@@ -16,8 +15,7 @@ import java.sql.SQLException;
 
 public class UserService extends BaseService<User, ObjectId, UserRepository> {
     private UserMapper mapper = new UserMapper();
-    private PostService postService = new PostService(new PostRepository());
-    private CommentService commentService = new CommentService(new CommentRepository());
+
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
     public UserService(UserRepository repository) {
@@ -29,26 +27,32 @@ public class UserService extends BaseService<User, ObjectId, UserRepository> {
     // O podíamos mapear el nombre
     // O simplemente ocultar las que no queramos usar en niveles superiores
     public List<UserDTO> getAllUsers() throws SQLException {
+        PostService postService = new PostService(new PostRepository());
+        CommentService commentService = new CommentService(new CommentRepository());
+
         List<User> usuarios = this.findAll();
         // Ahora debemos recuperar sus posts y sus comentarios
         List<UserDTO> lista = mapper.toDTO(usuarios);
         // Recorremos todos los usuarios
         lista.forEach(u-> {
             // Busco sus posts
-            u.setPosts(postService.getMyPosts(u.getId()));
+            u.setPosts(postService.getUserPosts(u.getId()));
             // Busco sus comentarios
-            u.setComentarios(commentService.getMyComments(u.getId()));
+            u.setComentarios(commentService.getUserComments(u.getId()));
         });
         return lista;
     }
 
     public UserDTO getUserById(ObjectId id) throws SQLException {
+        PostService postService = new PostService(new PostRepository());
+        CommentService commentService = new CommentService(new CommentRepository());
+
         User usuario = this.getById(id);
         UserDTO usuarioDTO = mapper.toDTO(usuario);
         // Busco sus posts
-        usuarioDTO.setPosts(postService.getMyPosts(usuario.getId()));
+        usuarioDTO.setPosts(postService.getUserPosts(usuario.getId()));
         // Busco sus comentarios
-        usuarioDTO.setComentarios(commentService.getMyComments(usuario.getId()));
+        usuarioDTO.setComentarios(commentService.getUserComments(usuario.getId()));
         return usuarioDTO;
     }
 
@@ -67,9 +71,12 @@ public class UserService extends BaseService<User, ObjectId, UserRepository> {
     }
 
     public UserDTO deleteUser(UserDTO userDTO) throws SQLException {
+        PostService postService = new PostService(new PostRepository());
+        CommentService commentService = new CommentService(new CommentRepository());
+
         User res = this.delete(mapper.fromDTO(userDTO));
         // Borramos todos los post asociados
-        postService.getMyPosts(userDTO.getId()).forEach(post -> {
+        postService.getUserPosts(userDTO.getId()).forEach(post -> {
             try {
                 postService.delete(post);
             } catch (SQLException e) {
@@ -77,7 +84,7 @@ public class UserService extends BaseService<User, ObjectId, UserRepository> {
             }
         });
         // Borramos todos los comentarios asociados
-        commentService.getMyComments(userDTO.getId()).forEach(comment -> {
+        commentService.getUserComments(userDTO.getId()).forEach(comment -> {
             try {
                 commentService.delete(comment);
             } catch (SQLException e) {

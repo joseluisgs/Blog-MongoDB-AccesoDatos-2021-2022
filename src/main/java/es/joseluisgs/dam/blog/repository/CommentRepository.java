@@ -99,4 +99,13 @@ public class CommentRepository implements CrudRespository<Comment, ObjectId> {
         mongoController.close();
         return list;
     }
+
+    public List<Comment> getByPostId(ObjectId postId) {
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Comment> commentCollection = mongoController.getCollection("blog", "comment", Comment.class);
+        List<Comment> list = commentCollection.find(eq("post", postId)).into(new ArrayList<Comment>());
+        mongoController.close();
+        return list;
+    }
 }

@@ -57,8 +57,12 @@ public class CommentService extends BaseService<Comment, ObjectId, CommentReposi
         return res;
     }
 
-    public Set<Comment> getMyComments(ObjectId userId) {
+    public Set<Comment> getUserComments(ObjectId userId) {
         return new HashSet(repository.getByUserId(userId));
+    }
+
+    public Set<Comment> getPostComments(ObjectId userId) {
+        return new HashSet(repository.getByPostId(userId));
     }
 
 //    private User getUserById(Long id) throws SQLException {

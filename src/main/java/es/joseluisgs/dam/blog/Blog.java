@@ -2,10 +2,12 @@ package es.joseluisgs.dam.blog;
 
 import es.joseluisgs.dam.blog.controller.CategoryController;
 import es.joseluisgs.dam.blog.controller.LoginController;
+import es.joseluisgs.dam.blog.controller.PostController;
 import es.joseluisgs.dam.blog.controller.UserController;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
+import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
@@ -18,6 +20,7 @@ import es.joseluisgs.dam.blog.repository.UserRepository;
 import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -324,7 +327,7 @@ public class Blog {
 
         System.out.println("FIN LOGIN");
     }
-   /*
+
     public void Posts() {
         System.out.println("INICIO POSTS");
 
@@ -334,75 +337,75 @@ public class Blog {
         List<PostDTO> lista = postController.getAllPost();
         System.out.println(lista);
 
-        System.out.println("GET Post con ID: " + lista.get(1).getId());
-        System.out.println(postController.getPostById(lista.get(1).getId()));
-
-        System.out.println("POST Insertando Post 1");
-        // Lo primero que necesito es un usuario... busco uno ya de la lista
-        User user = lista.get(3).getUser();
-        // Y una categoría, busco una ya de la lista...
-        Category category =lista.get(1).getCategory();
-
-        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
-        PostDTO postDTO1 = PostDTO.builder()
-                .titulo("Insert 1 " + LocalDateTime.now())
-                .contenido("Contenido " + Instant.now().toString())
-                .url("http://" + Math.random() + ".dominio.com")
-                .user(user)
-                .category(category)
-                .build();
-
-        postDTO1 = postController.postPost(postDTO1);
-        System.out.println(postDTO1);
-
-        System.out.println("POST Insertando Post 2");
-
-        user = lista.get(4).getUser();
-        category = lista.get(0).getCategory();
-
-        PostDTO postDTO2 = PostDTO.builder()
-                .titulo("Insert Otro 2 " + LocalDateTime.now())
-                .contenido("Contenido Otro" + Instant.now().toString())
-                .url("http://" + Math.random() + ".dominio.com")
-                .user(user)
-                .category(category)
-                .build();
-
-        postDTO2 = postController.postPost(postDTO2);
-        System.out.println(postDTO2);
-
-        System.out.println("UPDATE Post con ID: " + lista.get(4).getId());
-        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(lista.get(4).getId());
-        if (optionalPostDTO.isPresent()) {
-            optionalPostDTO.get().setTitulo("Update " + LocalDateTime.now());
-            optionalPostDTO.get().setContenido("emailUpdate" + LocalDateTime.now() + "@mail.com");
-            System.out.println(postController.updatePost(optionalPostDTO.get()));
-        }
-
-        System.out.println("DELETE Post con ID: " + postDTO2.getId());
-        // No lo borra por la bidireccionalidad... Hay que borralo de usuario
-        optionalPostDTO = postController.getPostByIdOptional(postDTO2.getId());
-        if (optionalPostDTO.isPresent()) {
-            System.out.println(postController.deletePost(optionalPostDTO.get()));
-        }
-
-        System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
-        System.out.println(postDTO1.getUser());
-
-        System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
-        // postController.getPostByUserId(postDTO1.getUser().getId()).forEach(System.out::println);
-        // No deja hacerla porque JPA de Mongo no permite hacer las relaciones en la consulta ;)
-        // Habria que cambiarlo en el servicio donde se hace esta consulta
-        PostDTO finalPostDTO = postDTO1;
-        lista.stream().filter(p -> p.getUser().getId() == finalPostDTO.getUser().getId());
-
-        System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
-        // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
-        postDTO1.getUser().getPosts().forEach(System.out::println);
-
-        System.out.println("FIN POSTS");
+//        System.out.println("GET Post con ID: " + lista.get(1).getId());
+//        System.out.println(postController.getPostById(lista.get(1).getId()));
+//
+//        System.out.println("POST Insertando Post 1");
+//        // Lo primero que necesito es un usuario... busco uno ya de la lista
+//        User user = lista.get(3).getUser();
+//        // Y una categoría, busco una ya de la lista...
+//        Category category =lista.get(1).getCategory();
+//
+//        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
+//        PostDTO postDTO1 = PostDTO.builder()
+//                .titulo("Insert 1 " + LocalDateTime.now())
+//                .contenido("Contenido " + Instant.now().toString())
+//                .url("http://" + Math.random() + ".dominio.com")
+//                .user(user)
+//                .category(category)
+//                .build();
+//
+//        postDTO1 = postController.postPost(postDTO1);
+//        System.out.println(postDTO1);
+//
+//        System.out.println("POST Insertando Post 2");
+//
+//        user = lista.get(4).getUser();
+//        category = lista.get(0).getCategory();
+//
+//        PostDTO postDTO2 = PostDTO.builder()
+//                .titulo("Insert Otro 2 " + LocalDateTime.now())
+//                .contenido("Contenido Otro" + Instant.now().toString())
+//                .url("http://" + Math.random() + ".dominio.com")
+//                .user(user)
+//                .category(category)
+//                .build();
+//
+//        postDTO2 = postController.postPost(postDTO2);
+//        System.out.println(postDTO2);
+//
+//        System.out.println("UPDATE Post con ID: " + lista.get(4).getId());
+//        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(lista.get(4).getId());
+//        if (optionalPostDTO.isPresent()) {
+//            optionalPostDTO.get().setTitulo("Update " + LocalDateTime.now());
+//            optionalPostDTO.get().setContenido("emailUpdate" + LocalDateTime.now() + "@mail.com");
+//            System.out.println(postController.updatePost(optionalPostDTO.get()));
+//        }
+//
+//        System.out.println("DELETE Post con ID: " + postDTO2.getId());
+//        // No lo borra por la bidireccionalidad... Hay que borralo de usuario
+//        optionalPostDTO = postController.getPostByIdOptional(postDTO2.getId());
+//        if (optionalPostDTO.isPresent()) {
+//            System.out.println(postController.deletePost(optionalPostDTO.get()));
+//        }
+//
+//        System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
+//        System.out.println(postDTO1.getUser());
+//
+//        System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
+//        // postController.getPostByUserId(postDTO1.getUser().getId()).forEach(System.out::println);
+//        // No deja hacerla porque JPA de Mongo no permite hacer las relaciones en la consulta ;)
+//        // Habria que cambiarlo en el servicio donde se hace esta consulta
+//        PostDTO finalPostDTO = postDTO1;
+//        lista.stream().filter(p -> p.getUser().getId() == finalPostDTO.getUser().getId());
+//
+//        System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
+//        // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
+//        postDTO1.getUser().getPosts().forEach(System.out::println);
+//
+//        System.out.println("FIN POSTS");
     }
-
+   /*
     public void Comments() {
         System.out.println("INICIO COMENTARIOS");
 
