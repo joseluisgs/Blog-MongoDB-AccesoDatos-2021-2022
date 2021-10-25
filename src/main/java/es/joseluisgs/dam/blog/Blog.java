@@ -2,10 +2,12 @@ package es.joseluisgs.dam.blog;
 
 import es.joseluisgs.dam.blog.controller.CategoryController;
 import es.joseluisgs.dam.blog.controller.LoginController;
+import es.joseluisgs.dam.blog.controller.PostController;
 import es.joseluisgs.dam.blog.controller.UserController;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
+import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
@@ -18,6 +20,7 @@ import es.joseluisgs.dam.blog.repository.UserRepository;
 import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -324,7 +327,7 @@ public class Blog {
 
         System.out.println("FIN LOGIN");
     }
-   /*
+
     public void Posts() {
         System.out.println("INICIO POSTS");
 
@@ -333,7 +336,6 @@ public class Blog {
         System.out.println("GET Todos los Post");
         List<PostDTO> lista = postController.getAllPost();
         System.out.println(lista);
-
         System.out.println("GET Post con ID: " + lista.get(1).getId());
         System.out.println(postController.getPostById(lista.get(1).getId()));
 
@@ -389,12 +391,11 @@ public class Blog {
         System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
         System.out.println(postDTO1.getUser());
 
-        System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
-        // postController.getPostByUserId(postDTO1.getUser().getId()).forEach(System.out::println);
-        // No deja hacerla porque JPA de Mongo no permite hacer las relaciones en la consulta ;)
-        // Habria que cambiarlo en el servicio donde se hace esta consulta
-        PostDTO finalPostDTO = postDTO1;
-        lista.stream().filter(p -> p.getUser().getId() == finalPostDTO.getUser().getId());
+        System.out.println("GET Posts con User ID: " +lista.get(1).getUser().getId() + " usando la Relación Post --> Usuario");
+        postController.getPostByUserId(lista.get(1).getUser().getId()).forEach(System.out::println);
+
+        System.out.println("GET Posts con User ID: " +lista.get(1).getUser().getId() + " usando la Relación Post --> Usuario v2");;
+        lista.stream().filter(p -> p.getUser().getId() == lista.get(1).getUser().getId()).forEach(System.out::println);
 
         System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
         // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
@@ -402,7 +403,7 @@ public class Blog {
 
         System.out.println("FIN POSTS");
     }
-
+   /*
     public void Comments() {
         System.out.println("INICIO COMENTARIOS");
 
