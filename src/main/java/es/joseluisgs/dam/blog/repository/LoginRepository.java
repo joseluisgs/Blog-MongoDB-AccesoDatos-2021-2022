@@ -1,6 +1,6 @@
 package es.joseluisgs.dam.blog.repository;
 
-import es.joseluisgs.dam.blog.dao.Login;
+import es.joseluisgs.dam.blog.model.Login;
 import es.joseluisgs.dam.blog.manager.HibernateController;
 
 import java.sql.SQLException;

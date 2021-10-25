@@ -1,7 +1,7 @@
 package es.joseluisgs.dam.blog.service;
 
-import es.joseluisgs.dam.blog.dao.Login;
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.model.Login;
+import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
 import es.joseluisgs.dam.blog.mapper.LoginMapper;
 import es.joseluisgs.dam.blog.repository.LoginRepository;

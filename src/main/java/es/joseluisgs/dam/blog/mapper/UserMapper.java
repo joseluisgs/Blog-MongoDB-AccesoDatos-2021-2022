@@ -1,10 +1,7 @@
 package es.joseluisgs.dam.blog.mapper;
 
-import es.joseluisgs.dam.blog.dao.Post;
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.dto.UserDTO;
-
-import java.util.List;
 
 public class UserMapper extends BaseMapper<User, UserDTO> {
     @Override

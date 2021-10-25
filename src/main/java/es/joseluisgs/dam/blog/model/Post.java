@@ -1,30 +1,20 @@
-package es.joseluisgs.dam.blog.dao;
+package es.joseluisgs.dam.blog.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-// Consulta para obtener todos
-@NamedQueries({
-    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
-    // Consulta para obtener todos los post dado el id de un usuario
-    @NamedQuery(name = "Post.getByUserId", query = "SELECT p FROM Post p WHERE p.user.id = :userId"),
-})
-@Table(name = "post") // Ojo con la minuscula que en la tabla está así
 public class Post {
-    private long id;
+    private ObjectId id;
     private String titulo;
     private String url;
     private String contenido;
@@ -43,20 +33,14 @@ public class Post {
         comments = new HashSet<Comment>();
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    public long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
-
-    @Basic
-    @Column(name = "titulo", nullable = false, length = 250)
     public String getTitulo() {
         return titulo;
     }
@@ -65,8 +49,6 @@ public class Post {
         this.titulo = titulo;
     }
 
-    @Basic
-    @Column(name = "url", nullable = true, length = 250)
     public String getUrl() {
         return url;
     }
@@ -75,8 +57,6 @@ public class Post {
         this.url = url;
     }
 
-    @Basic
-    @Column(name = "contenido", nullable = false, length = -1)
     public String getContenido() {
         return contenido;
     }
@@ -85,8 +65,6 @@ public class Post {
         this.contenido = contenido;
     }
 
-    @Basic
-    @Column(name = "fecha_publicacion", nullable = false)
     public Timestamp getFechaPublicacion() {
         return fechaPublicacion;
     }
@@ -108,8 +86,6 @@ public class Post {
         return Objects.hash(id, titulo, url, contenido, fechaPublicacion);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public User getUser() {
         return user;
     }
@@ -118,8 +94,6 @@ public class Post {
         this.user = user;
     }
 
-    @ManyToOne()
-    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     public Category getCategory() {
         return category;
     }
@@ -128,8 +102,6 @@ public class Post {
         this.category = category;
     }
 
-    // Pongo EAGER porque están en contexto diferentes y debememos conseguirlo
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.REMOVE) // cascade = CascadeType.ALL
     public Set<Comment> getComments() {
         return comments;
     }

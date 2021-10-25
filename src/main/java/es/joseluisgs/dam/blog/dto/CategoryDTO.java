@@ -1,15 +1,15 @@
 package es.joseluisgs.dam.blog.dto;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 
 @Builder
 @Getter
 @Setter
 public class CategoryDTO {
-    private Long id;
+    private ObjectId id;
     private String texto;
 
     // TODO Bidireccionalidad

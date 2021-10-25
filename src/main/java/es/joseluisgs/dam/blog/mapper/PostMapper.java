@@ -1,10 +1,7 @@
 package es.joseluisgs.dam.blog.mapper;
 
-import es.joseluisgs.dam.blog.dao.Comment;
-import es.joseluisgs.dam.blog.dao.Post;
+import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.dto.PostDTO;
-
-import java.util.List;
 
 public class PostMapper extends BaseMapper<Post, PostDTO> {
     @Override

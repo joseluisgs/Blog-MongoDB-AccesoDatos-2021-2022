@@ -1,37 +1,26 @@
-package es.joseluisgs.dam.blog.dao;
+package es.joseluisgs.dam.blog.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "login") // Ojo con la minuscula que en la tabla está así
-// Consulta por si queremos buscar logins por tokens
-@NamedQuery(name = "Login.getByToken", query = "SELECT l FROM Login l WHERE l.token = ?1")
 public class Login {
-    private long id;
+    private ObjectId id;
     private Timestamp ultimoAcceso;
     private String token;
 
-    @Id
-    public long getId() {
+    public ObjectId getId() {
         // return userId;
         return id;
     }
 
-//    public void setUserId(long userId) {
-//        this.userId = userId;
-//    }
-
-    @Basic
-    @Column(name = "ultimo_acceso", nullable = false)
     public Timestamp getUltimoAcceso() {
         return ultimoAcceso;
     }
@@ -40,9 +29,6 @@ public class Login {
         this.ultimoAcceso = ultimoAcceso;
     }
 
-    @Basic
-    // @ColumnTransformer(write=" UUID() ") // Le decimos que lo transforme con esta función. nos ahorramos hacerlo nosotros
-    @Column(name = "token", nullable = false, length = 100)
     public String getToken() {
         return token;
     }

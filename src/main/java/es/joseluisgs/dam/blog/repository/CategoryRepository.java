@@ -1,7 +1,7 @@
 package es.joseluisgs.dam.blog.repository;
 
 
-import es.joseluisgs.dam.blog.dao.Category;
+import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.manager.HibernateController;
 
 import javax.persistence.TypedQuery;

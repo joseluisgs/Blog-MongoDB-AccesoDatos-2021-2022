@@ -1,6 +1,6 @@
 package es.joseluisgs.dam.blog.service;
 
-import es.joseluisgs.dam.blog.dao.Comment;
+import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.dto.CommentDTO;
 import es.joseluisgs.dam.blog.mapper.CommentMapper;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
@@ -8,7 +8,6 @@ import es.joseluisgs.dam.blog.repository.CommentRepository;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 

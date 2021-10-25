@@ -1,6 +1,6 @@
 package es.joseluisgs.dam.blog.mapper;
 
-import es.joseluisgs.dam.blog.dao.Comment;
+import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.dto.CommentDTO;
 
 public class CommentMapper extends BaseMapper<Comment, CommentDTO> {

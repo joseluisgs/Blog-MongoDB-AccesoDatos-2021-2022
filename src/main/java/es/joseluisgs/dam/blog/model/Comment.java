@@ -1,22 +1,18 @@
-package es.joseluisgs.dam.blog.dao;
+package es.joseluisgs.dam.blog.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "comment") // Ojo con la minuscula que en la tabla está así
-// Todos los comentarios
-@NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c")
 public class Comment {
-    private long id;
+    private ObjectId id;
     private String texto;
     private Timestamp fechaPublicacion;
     private String uuid;
@@ -31,19 +27,14 @@ public class Comment {
         uuid = UUID.randomUUID().toString();
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    public long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "texto", nullable = false, length = -1)
     public String getTexto() {
         return texto;
     }
@@ -52,8 +43,6 @@ public class Comment {
         this.texto = texto;
     }
 
-    @Basic
-    @Column(name = "fecha_publicacion", nullable = false)
     public Timestamp getFechaPublicacion() {
         return fechaPublicacion;
     }
@@ -62,8 +51,6 @@ public class Comment {
         this.fechaPublicacion = fechaPublicacion;
     }
 
-    @Basic
-    @Column(name = "uuid", nullable = false, length = 100)
     public String getUuid() {
         return uuid;
     }
@@ -85,8 +72,6 @@ public class Comment {
         return Objects.hash(id, texto, fechaPublicacion, uuid);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public User getUser() {
         return user;
     }
@@ -95,8 +80,6 @@ public class Comment {
         this.user = user;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     public Post getPost() {
         return post;
     }

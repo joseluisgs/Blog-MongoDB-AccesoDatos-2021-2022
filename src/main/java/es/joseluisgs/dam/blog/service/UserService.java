@@ -1,6 +1,6 @@
 package es.joseluisgs.dam.blog.service;
 
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.mapper.UserMapper;
 import es.joseluisgs.dam.blog.repository.UserRepository;
@@ -8,7 +8,6 @@ import es.joseluisgs.dam.blog.utils.Cifrador;
 
 import java.util.Date;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.util.List;
 
 public class UserService extends BaseService<User, Long, UserRepository> {
