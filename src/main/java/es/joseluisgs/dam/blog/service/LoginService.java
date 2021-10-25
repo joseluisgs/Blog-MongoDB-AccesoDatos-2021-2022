@@ -10,8 +10,6 @@ import es.joseluisgs.dam.blog.utils.Cifrador;
 import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +51,7 @@ public class LoginService extends BaseService<Login, ObjectId, LoginRepository> 
         return service.getUserByMail(userMail);
     }
 
-    public boolean logout(Long userId) throws SQLException {
+    public boolean logout(ObjectId userId) throws SQLException {
         return repository.deleteByUserId(userId);
     }
 }
