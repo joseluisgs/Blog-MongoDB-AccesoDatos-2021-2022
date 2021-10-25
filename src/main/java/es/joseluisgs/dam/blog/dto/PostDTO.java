@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -18,7 +18,7 @@ public class PostDTO {
     private String titulo;
     private String url;
     private String contenido;
-    private Timestamp fechaPublicacion;
+    private LocalDateTime fechaPublicacion;
     // Autor
     private User user;
     // Categoría a la que pertenece

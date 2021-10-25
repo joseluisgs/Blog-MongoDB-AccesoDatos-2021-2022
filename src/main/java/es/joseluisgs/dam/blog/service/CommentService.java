@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -36,7 +37,7 @@ public class CommentService extends BaseService<Comment, ObjectId, CommentReposi
     }
 
     public CommentDTO postComment(CommentDTO commentDTO) throws SQLException {
-        commentDTO.setFechaPublicacion(Timestamp.from(Instant.now()));
+        commentDTO.setFechaPublicacion(LocalDateTime.now());
         Comment comment = this.save(mapper.fromDTO(commentDTO));
         CommentDTO res = mapper.toDTO(comment);
         return res;

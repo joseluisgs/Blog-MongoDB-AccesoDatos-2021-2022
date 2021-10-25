@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class UserDTO {
     // @Expose
     private String email;
     // @Expose
-    private Date fechaRegistro;
+    private LocalDate fechaRegistro;
 
     // TODO Bidireccionalidad
     // Lista de Comentarios

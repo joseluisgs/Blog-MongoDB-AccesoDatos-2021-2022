@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -14,16 +15,16 @@ import java.util.UUID;
 public class Comment {
     private ObjectId id;
     private String texto;
-    private Timestamp fechaPublicacion;
+    private LocalDateTime fechaPublicacion;
     private String uuid;
-    private User user;
-    private Post post;
+    private ObjectId user;
+    private ObjectId post;
 
-    public Comment(String texto, User usuario, Post post) {
+    public Comment(String texto, ObjectId usuario, ObjectId post) {
         this.texto = texto;
         this.user = usuario;
         this.post = post;
-        fechaPublicacion = Timestamp.from(Instant.now());
+        fechaPublicacion = LocalDateTime.now();
         uuid = UUID.randomUUID().toString();
     }
 
@@ -43,11 +44,11 @@ public class Comment {
         this.texto = texto;
     }
 
-    public Timestamp getFechaPublicacion() {
+    public LocalDateTime getFechaPublicacion() {
         return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(Timestamp fechaPublicacion) {
+    public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
 
@@ -72,19 +73,19 @@ public class Comment {
         return Objects.hash(id, texto, fechaPublicacion, uuid);
     }
 
-    public User getUser() {
+    public ObjectId getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(ObjectId user) {
         this.user = user;
     }
 
-    public Post getPost() {
+    public ObjectId getPost() {
         return post;
     }
 
-    public void setPost(Post post) {
+    public void setPost(ObjectId post) {
         this.post = post;
     }
 
@@ -98,7 +99,7 @@ public class Comment {
                 ", uuid='" + uuid + '\'' +
                 // Cuidado con esto que si no los post que tengan comentarios entra en recursividad
                 ", user=" + user +
-                ", post= Post{id:" + post.getId() + ", titulo=" + post.getTitulo() + ", " + "url=" + post.getUrl() +
+                ", post= Post{id:" + post +
                 "}}";
     }
 }

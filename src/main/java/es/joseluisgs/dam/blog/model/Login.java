@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
@@ -13,7 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Login {
     private ObjectId id;
-    private Timestamp ultimoAcceso;
+    private LocalDateTime ultimoAcceso;
     private String token;
 
     public ObjectId getId() {
@@ -21,11 +21,11 @@ public class Login {
         return id;
     }
 
-    public Timestamp getUltimoAcceso() {
+    public LocalDateTime getUltimoAcceso() {
         return ultimoAcceso;
     }
 
-    public void setUltimoAcceso(Timestamp ultimoAcceso) {
+    public void setUltimoAcceso(LocalDateTime ultimoAcceso) {
         this.ultimoAcceso = ultimoAcceso;
     }
 

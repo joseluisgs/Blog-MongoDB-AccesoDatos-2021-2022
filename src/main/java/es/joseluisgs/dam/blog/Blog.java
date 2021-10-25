@@ -1,26 +1,20 @@
 package es.joseluisgs.dam.blog;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.Mongo;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import es.joseluisgs.dam.blog.controller.*;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.model.User;
-import es.joseluisgs.dam.blog.dto.*;
-import es.joseluisgs.dam.blog.mapper.PostMapper;
-import es.joseluisgs.dam.blog.mapper.UserMapper;
 import es.joseluisgs.dam.blog.repository.CategoryRepository;
+import es.joseluisgs.dam.blog.repository.CommentRepository;
+import es.joseluisgs.dam.blog.repository.PostRepository;
+import es.joseluisgs.dam.blog.repository.UserRepository;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class Blog {
     private static Blog instance;
@@ -39,7 +33,8 @@ public class Blog {
         // Borramos los datos previos
         removeData();
 
-            // Categorías
+        // Categorías
+        System.out.println("Insertando Categorías de Ejemplo");
         CategoryRepository categoryRepository = new CategoryRepository();
         Category c1 = new Category("General");
         Category c2 = new Category("Dudas");
@@ -51,70 +46,147 @@ public class Blog {
             categoryRepository.save(c3);
             categoryRepository.save(c4);
         } catch (SQLException e) {
-            e.printStackTrace();
+           System.err.println("Error al insertar datos de ejemplo de Categorías: " + e.getMessage());
         }
 
         // Usuarios
-/*        System.out.println("Insertando Usuarios de Ejemplo");
+        System.out.println("Insertando Usuarios de Ejemplo");
+        UserRepository userRepository = new UserRepository();
+        User u1 = new User("Pepe Perez","pepe@pepe.es","1234");
+        User u2 = new User("Ana Anaya","ana@anaya.es","1234");
+        User u3 = new User("Paco Perez","paco@perez.es","1234");
+        User u4 = new User("Son Goku","goku@dragonball.es","1234");
+        User u5 = new User("Chuck Norris","chuck@norris.es","1234");
 
-        hc.getTransaction().begin();
-        User u1 = new User("Pepe Perez","pepe@pepe.es","1234"); // 5
-        User u2 = new User("Ana Anaya","ana@anaya.es","1234"); // 6
-        User u3 = new User("Paco Perez","paco@perez.es","1234"); // 7
-        User u4 = new User("Son Goku","goku@dragonball.es","1234"); // 8
-        User u5 = new User("Chuck Norris","chuck@norris.es","1234");  // 9
-
-        hc.getManager().persist(u1);
-        hc.getManager().persist(u2);
-        hc.getManager().persist(u3);
-        hc.getManager().persist(u4);
-        hc.getManager().persist(u5);
-
-        hc.getTransaction().commit();
+        try {
+            userRepository.save(u1);
+            userRepository.save(u2);
+            userRepository.save(u3);
+            userRepository.save(u4);
+            userRepository.save(u5);
+        } catch (SQLException e) {
+            System.err.println("Error al insertar datos de ejemplo de Usuarios: " + e.getMessage());
+        }
 
         // Post
         System.out.println("Insertando Post de Ejemplo");
+        PostRepository postRepository = new PostRepository();
+        Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1.getId(), c1.getId());
+        Post p2 = new Post("Post num 2", "http://post2.com", "Este es el post num 2", u2.getId(), c2.getId());
+        Post p3 = new Post("Post num 3", "http://post3.com", "Este es el post num 3", u3.getId(), c3.getId());
+        Post p4 = new Post("Post num 4", "http://post4.com", "Este es el post num 4", u1.getId(), c1.getId());
+        Post p5 = new Post("Post num 5", "http://post5.com", "Este es el post num 5", u2.getId(), c3.getId());
 
-        hc.getTransaction().begin();
-        Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1, c1); //10
-        Post p2 = new Post("Post num 2", "http://post2.com", "Este es el post num 1", u2, c2); //11
-        Post p3 = new Post("Post num 3", "http://post3.com", "Este es el post num 1", u3, c3); //12
-        Post p4 = new Post("Post num 4", "http://post4.com", "Este es el post num 1", u1, c1); //13
-        Post p5 = new Post("Post num 5", "http://post5.com", "Este es el post num 1", u2, c3); //14
+        try {
+            postRepository.save(p1);
+            postRepository.save(p2);
+            postRepository.save(p3);
+            postRepository.save(p4);
+            postRepository.save(p5);
 
-        hc.getManager().persist(p1);
-        hc.getManager().persist(p2);
-        hc.getManager().persist(p3);
-        hc.getManager().persist(p4);
-        hc.getManager().persist(p5);
+            // Actualizamos los usaurios, bidireccionalidad
+            Set<ObjectId> posts = new HashSet<>();
+            // usuario 1
+            posts.add(p1.getId());
+            posts.add(p4.getId());
+            u1.setPosts(posts);
+            userRepository.update(u1);
+            //Usuario 2
+            posts = new HashSet<>();
+            posts.add(p2.getId());
+            posts.add(p5.getId());
+            u2.setPosts(posts);
+            userRepository.update(u2);
+            //Usuario 3
+            posts = new HashSet<>();
+            posts.add(p3.getId());
+            u3.setPosts(posts);
+            userRepository.update(u3);
 
-        hc.getTransaction().commit();
+        } catch (SQLException e) {
+            System.err.println("Error al insertar datos de ejemplo de Posts: " + e.getMessage());
+        }
 
         // Comentarios
         System.out.println("Insertando Comentarios de Ejemplo");
+        CommentRepository commentRepository = new CommentRepository();
 
-        hc.getTransaction().begin();
-        Comment cm1 = new Comment("Comentario 01,", u1, p1);//15
-        Comment cm2 = new Comment("Comentario 02,", u2, p2);//16
-        Comment cm3 = new Comment("Comentario 03,", u3, p2);//17
-        Comment cm4 = new Comment("Comentario 04,", u1, p3);//18
-        Comment cm5 = new Comment("Comentario 05,", u4, p4);//19
-        Comment cm6 = new Comment("Comentario 06,", u1, p3);//20
-        Comment cm7 = new Comment("Comentario 07,", u4, p4);//21
-        Comment cm8 = new Comment("Comentario 08,", u2, p3);//22
 
-        hc.getManager().persist(cm1);
-        hc.getManager().persist(cm2);
-        hc.getManager().persist(cm3);
-        hc.getManager().persist(cm4);
-        hc.getManager().persist(cm5);
-        hc.getManager().persist(cm6);
-        hc.getManager().persist(cm7);
-        hc.getManager().persist(cm8);
+        Comment cm1 = new Comment("Comentario 01,", u1.getId(), p1.getId());
+        Comment cm2 = new Comment("Comentario 02,", u2.getId(), p2.getId());
+        Comment cm3 = new Comment("Comentario 03,", u3.getId(), p2.getId());
+        Comment cm4 = new Comment("Comentario 04,", u1.getId(), p3.getId());
+        Comment cm5 = new Comment("Comentario 05,", u4.getId(), p4.getId());
+        Comment cm6 = new Comment("Comentario 06,", u1.getId(), p3.getId());
+        Comment cm7 = new Comment("Comentario 07,", u4.getId(), p4.getId());
+        Comment cm8 = new Comment("Comentario 08,", u2.getId(), p3.getId());
 
-        hc.getTransaction().commit();
+        try {
+            commentRepository.save(cm1);
+            commentRepository.save(cm2);
+            commentRepository.save(cm3);
+            commentRepository.save(cm4);
+            commentRepository.save(cm5);
+            commentRepository.save(cm6);
+            commentRepository.save(cm7);
+            commentRepository.save(cm8);
 
-        hc.close();*/
+            // Actualizamos los usaurios, bidireccionalidad
+            Set<ObjectId> comments = new HashSet<>();
+            // usuario 1
+            comments.add(cm1.getId());
+            comments.add(cm4.getId());
+            comments.add(cm6.getId());
+            u1.setComments(comments);
+            userRepository.update(u1);
+            //Usuario 2
+            comments = new HashSet<>();
+            comments.add(cm2.getId());
+            comments.add(cm8.getId());
+            u2.setComments(comments);
+            userRepository.update(u2);
+            //Usuario 3
+            comments = new HashSet<>();
+            comments.add(cm3.getId());
+            u3.setComments(comments);
+            userRepository.update(u3);
+            //Usuario 4
+            comments = new HashSet<>();
+            comments.add(cm5.getId());
+            comments.add(cm7.getId());
+            u4.setComments(comments);
+            userRepository.update(u4);
+
+            // Actualizamos los Post, bidireccionalidad
+            // Post 1
+            comments = new HashSet<>();
+            comments.add(cm1.getId());
+            p1.setComments(comments);
+            postRepository.update(p1);
+            // Post 2
+            comments = new HashSet<>();
+            comments.add(cm2.getId());
+            comments.add(cm3.getId());
+            p2.setComments(comments);
+            postRepository.update(p2);
+            // Post 3
+            comments = new HashSet<>();
+            comments.add(cm4.getId());
+            comments.add(cm6.getId());
+            comments.add(cm8.getId());
+            p3.setComments(comments);
+            postRepository.update(p3);
+            // Post 4
+            comments = new HashSet<>();
+            comments.add(cm5.getId());
+            comments.add(cm7.getId());;
+            p4.setComments(comments);
+            postRepository.update(p4);
+
+        } catch (SQLException e) {
+            System.err.println("Error al insertar datos de ejemplo de Comentarios: " + e.getMessage());
+        }
+
 
     }
 

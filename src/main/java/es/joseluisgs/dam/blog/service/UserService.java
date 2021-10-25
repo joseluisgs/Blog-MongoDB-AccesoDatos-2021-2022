@@ -7,6 +7,7 @@ import es.joseluisgs.dam.blog.repository.UserRepository;
 import es.joseluisgs.dam.blog.utils.Cifrador;
 import org.bson.types.ObjectId;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserService extends BaseService<User, ObjectId, UserRepository> {
         // Ciframos antes el password
         userDTO.setPassword(Cifrador.getInstance().SHA256(userDTO.getPassword()));
         // Le ponemos la fecha de registro
-        userDTO.setFechaRegistro(new Date(System.currentTimeMillis()));
+        userDTO.setFechaRegistro(LocalDate.now());
         User res = this.save(mapper.fromDTO(userDTO));
         return mapper.toDTO(res);
     }

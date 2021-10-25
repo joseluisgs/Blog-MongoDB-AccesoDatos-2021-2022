@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @NoArgsConstructor
@@ -14,17 +15,17 @@ public class User {
     private String nombre;
     private String email;
     private String password;
-    private Date fechaRegistro;
-    private Set<Post> posts;
-    private Set<Comment> comments;
+    private LocalDate fechaRegistro;
+    private Set<ObjectId> posts;
+    private Set<ObjectId> comments;
 
     public User(String nombre, String email, String password) {
         this.nombre = nombre;
         this.email = email;
         this.password = Cifrador.getInstance().SHA256(password);
-        this.fechaRegistro = new Date(System.currentTimeMillis());
-        this.posts = new HashSet<Post>();
-        this.comments = new HashSet<Comment>();
+        this.fechaRegistro = LocalDate.now();
+        this.posts = new HashSet<ObjectId>();
+        this.comments = new HashSet<ObjectId>();
     }
 
     public ObjectId getId() {
@@ -59,11 +60,11 @@ public class User {
         this.password = password;
     }
 
-    public Date getFechaRegistro() {
+    public LocalDate getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(Date fechaRegistro) {
+    public void setFechaRegistro(LocalDate fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
@@ -80,19 +81,19 @@ public class User {
         return Objects.hash(id, nombre, email, password, fechaRegistro);
     }
 
-    public Set<Post> getPosts() {
+    public Set<ObjectId> getPosts() {
         return posts;
     }
 
-    public void setPosts(Set<Post> posts) {
+    public void setPosts(Set<ObjectId> posts) {
         this.posts = posts;
     }
 
-    public Set<Comment> getComments() {
+    public Set<ObjectId> getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(Set<ObjectId> comments) {
         this.comments = comments;
     }
 

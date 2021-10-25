@@ -12,8 +12,8 @@ public class CommentMapper extends BaseMapper<Comment, CommentDTO> {
         }
         comment.setTexto(item.getTexto());
         comment.setFechaPublicacion(item.getFechaPublicacion());
-        comment.setUser(item.getUser());
-        comment.setPost(item.getPost());
+        comment.setUser(item.getUser().getId());
+        comment.setPost(item.getPost().getId());
         return comment;
     }
 
@@ -23,8 +23,8 @@ public class CommentMapper extends BaseMapper<Comment, CommentDTO> {
                 .id(item.getId())
                 .texto(item.getTexto())
                 .fechaPublicacion(item.getFechaPublicacion())
-                .user(item.getUser())
-                .post(item.getPost())
+                //.user(item.getUser())
+                //.post(item.getPost())
                 .build();
     }
 }

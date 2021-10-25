@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PostService extends BaseService<Post, ObjectId, PostRepository> {
@@ -33,7 +34,7 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
 
     public PostDTO postPost(PostDTO postDTO) throws SQLException {
         // Le ponemos la fecha
-        postDTO.setFechaPublicacion(Timestamp.from(Instant.now()));
+        postDTO.setFechaPublicacion(LocalDateTime.now());
         Post post = this.save(mapper.fromDTO(postDTO));
         return mapper.toDTO(post);
     }

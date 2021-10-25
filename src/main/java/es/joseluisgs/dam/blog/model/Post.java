@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -18,19 +19,19 @@ public class Post {
     private String titulo;
     private String url;
     private String contenido;
-    private Timestamp fechaPublicacion;
-    private User user;
-    private Category category;
-    private Set<Comment> comments;
+    private LocalDateTime fechaPublicacion;
+    private ObjectId user;
+    private ObjectId category;
+    private Set<ObjectId> comments;
 
-    public Post(String titulo, String url, String contenido, User user, Category category) {
+    public Post(String titulo, String url, String contenido, ObjectId user, ObjectId category) {
         this.titulo = titulo;
         this.url = url;
         this.contenido = contenido;
         this.user = user;
         this.category = category;
-        fechaPublicacion = Timestamp.from(Instant.now());
-        comments = new HashSet<Comment>();
+        fechaPublicacion = LocalDateTime.now();
+        comments = new HashSet<ObjectId>();
     }
 
     public ObjectId getId() {
@@ -65,11 +66,11 @@ public class Post {
         this.contenido = contenido;
     }
 
-    public Timestamp getFechaPublicacion() {
+    public LocalDateTime getFechaPublicacion() {
         return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(Timestamp fechaPublicacion) {
+    public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
 
@@ -86,27 +87,27 @@ public class Post {
         return Objects.hash(id, titulo, url, contenido, fechaPublicacion);
     }
 
-    public User getUser() {
+    public ObjectId getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(ObjectId user) {
         this.user = user;
     }
 
-    public Category getCategory() {
+    public ObjectId getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(ObjectId category) {
         this.category = category;
     }
 
-    public Set<Comment> getComments() {
+    public Set<ObjectId> getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(Set<ObjectId> comments) {
         this.comments = comments;
     }
 

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @Builder
@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class CommentDTO {
     private ObjectId id;
     private String texto;
-    private Timestamp fechaPublicacion;
+    private LocalDateTime fechaPublicacion;
     // Autor que la realiza
     private User user;
     // Post al que pertenece

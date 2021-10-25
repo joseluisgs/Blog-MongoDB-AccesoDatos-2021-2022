@@ -4,14 +4,14 @@ import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @Data
 @Builder
 public class LoginDTO {
     private ObjectId id;
-    private Timestamp ultimoAcceso;
+    private LocalDateTime ultimoAcceso;
     private String token;
 
     @Override

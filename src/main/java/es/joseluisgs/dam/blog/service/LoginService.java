@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class LoginService extends BaseService<Login, ObjectId, LoginRepository> 
             if ((user != null) && user.getPassword().equals(cif.SHA256(userPassword))) {
                 Login insert = new Login();
                 insert.setId(user.getId());
-                insert.setUltimoAcceso(Timestamp.from(Instant.now()));
+                insert.setUltimoAcceso(LocalDateTime.now());
                 LoginDTO login = mapper.toDTO(repository.save(insert));
                 return login;
             }
