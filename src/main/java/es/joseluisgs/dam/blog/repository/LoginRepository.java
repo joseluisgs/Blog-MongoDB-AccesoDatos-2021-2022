@@ -2,9 +2,7 @@ package es.joseluisgs.dam.blog.repository;
 
 import com.mongodb.client.MongoCollection;
 import es.joseluisgs.dam.blog.database.MongoDBController;
-import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Login;
-import es.joseluisgs.dam.blog.manager.HibernateController;
 import org.bson.Document;
 
 import java.sql.SQLException;

@@ -5,9 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
 import es.joseluisgs.dam.blog.database.MongoDBController;
-import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
-import es.joseluisgs.dam.blog.manager.HibernateController;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
