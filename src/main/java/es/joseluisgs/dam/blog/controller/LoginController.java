@@ -3,6 +3,7 @@ package es.joseluisgs.dam.blog.controller;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
 import es.joseluisgs.dam.blog.repository.LoginRepository;
 import es.joseluisgs.dam.blog.service.LoginService;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class LoginController {
         return  Optional.empty();
     }
 
-    public boolean logout(Long userId) {
+    public boolean logout(ObjectId userId) {
         try {
             if (loginService.logout(userId))
                 return true;

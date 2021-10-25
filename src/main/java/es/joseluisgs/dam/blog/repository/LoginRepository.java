@@ -47,13 +47,18 @@ public class LoginRepository implements CrudRespository<Login, ObjectId> {
         throw new SQLException("Error: Método update no implementado");
     }
 
-    public boolean deleteByUserId(Long userId) throws SQLException {
+    public boolean deleteByUserId(ObjectId userId) throws SQLException {
         MongoDBController mongoController = MongoDBController.getInstance();
         mongoController.open();
-        MongoCollection<Login> commentCollection = mongoController.getCollection("blog", "login", Login.class);
+        MongoCollection<Login> loginCollection  = mongoController.getCollection("blog", "login", Login.class);
         try {
-            Document filtered = new Document("user_id", userId);
-            return true;
+            Document filtered = new Document("_id", userId);
+            Login login = loginCollection.findOneAndDelete(filtered);
+            if (login != null) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             throw new SQLException("Error LoginRepository al eliminar login con id: " + userId);
         } finally {

@@ -1,9 +1,11 @@
 package es.joseluisgs.dam.blog;
 
 import es.joseluisgs.dam.blog.controller.CategoryController;
+import es.joseluisgs.dam.blog.controller.LoginController;
 import es.joseluisgs.dam.blog.controller.UserController;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
+import es.joseluisgs.dam.blog.dto.LoginDTO;
 import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
@@ -294,7 +296,7 @@ public class Blog {
 
         System.out.println("FIN USUARIOS");
     }
-    /*
+
 
 
     public void Login() {
@@ -313,16 +315,16 @@ public class Blog {
         System.out.println("Login con un usario que NO existe o mal Password datos correctos");
         login2 = loginController.login("pepe@pepe2.es", "12555");
         System.out.println(login2.isPresent() ? "Login OK" : "Usuario o password incorrectos");
+        System.out.println("Logout de usuario que está logueado");
 
-        // System.out.println("Logout de usuario que está logueado");
-        // System.out.println(loginController.logout(login.get().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
+        System.out.println(loginController.logout(login.get().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
 
-       System.out.println("Logout de usuario que no está logueado");
-      System.out.println(loginController.logout(99999999L)? "Logout OK" : "Usuarios no logueado en el sistema");
+        System.out.println("Logout de usuario que no está logueado");
+        System.out.println(loginController.logout(new ObjectId())? "Logout OK" : "Usuarios no logueado en el sistema");
 
         System.out.println("FIN LOGIN");
     }
-
+   /*
     public void Posts() {
         System.out.println("INICIO POSTS");
 
