@@ -5,9 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
 import es.joseluisgs.dam.blog.database.MongoDBController;
-import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Post;
-import es.joseluisgs.dam.blog.manager.HibernateController;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -88,15 +86,10 @@ public class PostRepository implements CrudRespository<Post, ObjectId> {
     }
 
     public List<Post> getByUserId(Long userId) {
-        // Aquí habria que cambiar la consulta porque JPA no deja hacer NamedQuerys con Join en Mongo
         MongoDBController mongoController = MongoDBController.getInstance();
         mongoController.open();
         MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
-        // Vamos a cambiar la consulta, par facilitar las cosas a JPA
-//        List<Post> list = hc.getManager().createNamedQuery("Post.getByUserId", Post.class)
-//                .setParameter("userId", userId).getResultList();
-        List<Post> list = hc.getManager().createNamedQuery("User.getMyPosts", Post.class)
-                .setParameter("userId", userId).getResultList();
+        List<Post> list = postCollection.find(eq("user_id", userId)).into(new ArrayList<Post>());
         mongoController.close();
         return list;
     }
