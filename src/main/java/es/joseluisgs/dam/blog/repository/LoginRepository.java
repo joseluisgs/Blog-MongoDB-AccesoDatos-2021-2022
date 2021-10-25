@@ -1,7 +1,11 @@
 package es.joseluisgs.dam.blog.repository;
 
+import com.mongodb.client.MongoCollection;
+import es.joseluisgs.dam.blog.database.MongoDBController;
+import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Login;
 import es.joseluisgs.dam.blog.manager.HibernateController;
+import org.bson.Document;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -21,21 +25,16 @@ public class LoginRepository implements CrudRespository<Login, Long> {
     @Override
     public Login save(Login login) throws SQLException {
         UUID uuid = UUID.randomUUID();
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Login> loginCollection = mongoController.getCollection("blog", "login", Login.class);
         try {
-            hc.getTransaction().begin();
-            login.setToken(uuid.toString());
-            hc.getManager().persist(login);
-            hc.getTransaction().commit();
+            loginCollection.insertOne(login);
             return login;
         } catch (Exception e) {
             throw new SQLException("Error LoginRepository al insertar login en BD");
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 
@@ -50,23 +49,16 @@ public class LoginRepository implements CrudRespository<Login, Long> {
     }
 
     public boolean deleteByUserId(Long userId) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Login> commentCollection = mongoController.getCollection("blog", "login", Login.class);
         try {
-            hc.getTransaction().begin();
-            // Ojo que borrar implica que estemos en la misma sesión y nos puede dar problemas, por eso lo recuperamos otra vez
-            Login login = hc.getManager().find(Login.class, userId);
-            // System.out.println(login);
-            hc.getManager().remove(login);
-            hc.getTransaction().commit();
+            Document filtered = new Document("user_id", userId);
             return true;
         } catch (Exception e) {
             throw new SQLException("Error LoginRepository al eliminar login con id: " + userId);
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 
