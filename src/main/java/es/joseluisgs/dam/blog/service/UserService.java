@@ -68,6 +68,22 @@ public class UserService extends BaseService<User, ObjectId, UserRepository> {
 
     public UserDTO deleteUser(UserDTO userDTO) throws SQLException {
         User res = this.delete(mapper.fromDTO(userDTO));
+        // Borramos todos los post asociados
+        postService.getMyPosts(userDTO.getId()).forEach(post -> {
+            try {
+                postService.delete(post);
+            } catch (SQLException e) {
+                System.err.println("Error UserService al borrar mi post con id: " + post.getId());
+            }
+        });
+        // Borramos todos los comentarios asociados
+        commentService.getMyComments(userDTO.getId()).forEach(comment -> {
+            try {
+                commentService.delete(comment);
+            } catch (SQLException e) {
+                System.err.println("Error UserService al borrar mi comentario con id: " + comment.getId());
+            }
+        });
         return mapper.toDTO(res);
     }
 
