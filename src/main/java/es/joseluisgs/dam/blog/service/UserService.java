@@ -70,6 +70,11 @@ public class UserService extends BaseService<User, ObjectId, UserRepository> {
         return mapper.toDTO(res);
     }
 
+    public User updateUser(User user) throws SQLException {
+        User res = this.update(user);
+        return res;
+    }
+
     public UserDTO deleteUser(UserDTO userDTO) throws SQLException {
         PostService postService = new PostService(new PostRepository());
         CommentService commentService = new CommentService(new CommentRepository());

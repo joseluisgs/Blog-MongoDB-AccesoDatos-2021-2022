@@ -336,27 +336,26 @@ public class Blog {
         System.out.println("GET Todos los Post");
         List<PostDTO> lista = postController.getAllPost();
         System.out.println(lista);
+        System.out.println("GET Post con ID: " + lista.get(1).getId());
+        System.out.println(postController.getPostById(lista.get(1).getId()));
 
-//        System.out.println("GET Post con ID: " + lista.get(1).getId());
-//        System.out.println(postController.getPostById(lista.get(1).getId()));
-//
-//        System.out.println("POST Insertando Post 1");
-//        // Lo primero que necesito es un usuario... busco uno ya de la lista
-//        User user = lista.get(3).getUser();
-//        // Y una categoría, busco una ya de la lista...
-//        Category category =lista.get(1).getCategory();
-//
-//        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
-//        PostDTO postDTO1 = PostDTO.builder()
-//                .titulo("Insert 1 " + LocalDateTime.now())
-//                .contenido("Contenido " + Instant.now().toString())
-//                .url("http://" + Math.random() + ".dominio.com")
-//                .user(user)
-//                .category(category)
-//                .build();
-//
-//        postDTO1 = postController.postPost(postDTO1);
-//        System.out.println(postDTO1);
+        System.out.println("POST Insertando Post 1");
+        // Lo primero que necesito es un usuario... busco uno ya de la lista
+        User user = lista.get(3).getUser();
+        // Y una categoría, busco una ya de la lista...
+        Category category =lista.get(1).getCategory();
+
+        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
+        PostDTO postDTO1 = PostDTO.builder()
+                .titulo("Insert 1 " + LocalDateTime.now())
+                .contenido("Contenido " + Instant.now().toString())
+                .url("http://" + Math.random() + ".dominio.com")
+                .user(user)
+                .category(category)
+                .build();
+
+        postDTO1 = postController.postPost(postDTO1);
+        System.out.println(postDTO1);
 //
 //        System.out.println("POST Insertando Post 2");
 //

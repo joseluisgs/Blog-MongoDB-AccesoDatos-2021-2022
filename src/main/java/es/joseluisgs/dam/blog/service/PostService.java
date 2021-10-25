@@ -38,8 +38,8 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
         // Por cada post recuperamos su usuario, sus categoria y sus comentarios
         // Recorremos todos los usuarios
         posts.forEach(p -> {
-            // Busco sus posts
             PostDTO postDTO = mapper.toDTO(p);
+            // Busco sus posts
             try {
                 postDTO.setUser(userService.getById(p.getUser()));
             } catch (SQLException e) {
@@ -60,14 +60,48 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     }
 
     public PostDTO getPostById(ObjectId id) throws SQLException {
-        return mapper.toDTO(this.getById(id));
+        UserService userService = new UserService(new UserRepository());
+        CategoryService categoryService = new CategoryService(new CategoryRepository());
+        CommentService commentService = new CommentService(new CommentRepository());
+
+        Post post = this.getById(id);
+        PostDTO postDTO = mapper.toDTO(post);
+        try {
+            postDTO.setUser(userService.getById(post.getUser()));
+        } catch (SQLException e) {
+            System.err.println("Error PostService al buscar mi usuario autor con ID: " + post.getUser());
+        }
+        // Busco sus categoria
+        try {
+            postDTO.setCategory(categoryService.getById(post.getCategory()));
+        } catch (SQLException e) {
+            System.err.println("Error PostService al buscar mi categoria con ID: " + post.getCategory());
+        }
+        // Busco sus comentarios
+        postDTO.setComments(commentService.getPostComments(post.getId()));
+
+        return postDTO;
     }
 
     public PostDTO postPost(PostDTO postDTO) throws SQLException {
         // Le ponemos la fecha
         postDTO.setFechaPublicacion(LocalDateTime.now());
-        Post post = this.save(mapper.fromDTO(postDTO));
-        return mapper.toDTO(post);
+        Post post = mapper.fromDTO(postDTO);
+        // Le ponemos el usuario
+        post.setUser(postDTO.getUser().getId());
+        // Le ponemos la categoria
+        post.setCategory(postDTO.getCategory().getId());
+        post = this.save(post);
+        // No terminamos aqui. A usuario hay que insertarle el post
+        postDTO.getUser().getPosts().add(post.getId());
+        UserService userService = new UserService(new UserRepository());
+        userService.updateUser(postDTO.getUser());
+
+        // Con las categorias no tenemos bidireccionalidad
+        PostDTO finalPost  = mapper.toDTO(post);
+        finalPost.setUser(postDTO.getUser());
+        finalPost.setCategory(postDTO.getCategory());
+        return finalPost;
     }
 
     public PostDTO updatePost(PostDTO postDTO) throws SQLException {
