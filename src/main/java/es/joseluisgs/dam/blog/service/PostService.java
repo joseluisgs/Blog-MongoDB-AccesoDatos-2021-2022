@@ -1,16 +1,18 @@
 package es.joseluisgs.dam.blog.service;
 
-import es.joseluisgs.dam.blog.dao.Post;
+import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.mapper.PostMapper;
 import es.joseluisgs.dam.blog.repository.PostRepository;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class PostService extends BaseService<Post, Long, PostRepository> {
+public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     PostMapper mapper = new PostMapper();
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
@@ -26,13 +28,13 @@ public class PostService extends BaseService<Post, Long, PostRepository> {
         return mapper.toDTO(this.findAll());
     }
 
-    public PostDTO getPostById(Long id) throws SQLException {
+    public PostDTO getPostById(ObjectId id) throws SQLException {
         return mapper.toDTO(this.getById(id));
     }
 
     public PostDTO postPost(PostDTO postDTO) throws SQLException {
         // Le ponemos la fecha
-        postDTO.setFechaPublicacion(Timestamp.from(Instant.now()));
+        postDTO.setFechaPublicacion(LocalDateTime.now());
         Post post = this.save(mapper.fromDTO(postDTO));
         return mapper.toDTO(post);
     }

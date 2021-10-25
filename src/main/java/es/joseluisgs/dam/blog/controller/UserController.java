@@ -3,6 +3,7 @@ package es.joseluisgs.dam.blog.controller;
 import es.joseluisgs.dam.blog.dto.UserDTO;
 import es.joseluisgs.dam.blog.repository.UserRepository;
 import es.joseluisgs.dam.blog.service.UserService;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -37,7 +38,7 @@ public class UserController {
         }
     }
 
-    public UserDTO getUserById(Long id) {
+    public UserDTO getUserById(ObjectId id) {
         // Vamos a devolver el JSON de las categorías
         try {
             return userService.getUserById(id);
@@ -75,7 +76,7 @@ public class UserController {
     }
 
     // Lo hago así para que veas otra forma de no devolver null y evitar errores.
-    public Optional<UserDTO> getUserByIdOptional(Long id) {
+    public Optional<UserDTO> getUserByIdOptional(ObjectId id) {
         try {
             return Optional.of(userService.getUserById(id));
         } catch (SQLException e) {

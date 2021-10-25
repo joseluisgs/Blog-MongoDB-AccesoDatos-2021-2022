@@ -3,6 +3,7 @@ package es.joseluisgs.dam.blog.controller;
 import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.repository.PostRepository;
 import es.joseluisgs.dam.blog.service.PostService;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -36,7 +37,7 @@ public class PostController {
         }
     }
 
-    public PostDTO getPostById(Long id) {
+    public PostDTO getPostById(ObjectId id) {
         try {
            return postService.getPostById(id);
         } catch (SQLException e) {
@@ -73,7 +74,7 @@ public class PostController {
     }
 
     // Lo hago como Optional para que veas como deberías hacerlo sin devolver siempre null
-    public Optional<PostDTO> getPostByIdOptional(Long id) {
+    public Optional<PostDTO> getPostByIdOptional(ObjectId id) {
         try {
             return Optional.of(postService.getPostById(id));
         } catch (SQLException e) {

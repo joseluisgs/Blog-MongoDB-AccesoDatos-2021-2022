@@ -1,6 +1,5 @@
 package es.joseluisgs.dam.blog;
 
-import es.joseluisgs.dam.blog.manager.HibernateController;
 import es.joseluisgs.dam.blog.utils.ApplicationProperties;
 
 public class App {
@@ -17,18 +16,18 @@ public class App {
             blog.initDataBase();
 
         // Categorías
-        blog.Categories();
+        //blog.Categories();
 
         // Usuarios
-        blog.Users();
+        //blog.Users();
 
         // Login
-       blog.Login();
+       //blog.Login();
 
         // Posts
-        blog.Posts();
+        //blog.Posts();
 
         // Comments
-        blog.Comments();
+        //blog.Comments();
     }
 }

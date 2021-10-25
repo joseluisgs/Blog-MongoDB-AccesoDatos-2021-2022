@@ -1,6 +1,6 @@
 package es.joseluisgs.dam.blog.mapper;
 
-import es.joseluisgs.dam.blog.dao.Login;
+import es.joseluisgs.dam.blog.model.Login;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
 
 public class LoginMapper extends BaseMapper<Login, LoginDTO> {

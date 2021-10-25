@@ -1,6 +1,5 @@
 package es.joseluisgs.dam.blog.controller;
 
-import es.joseluisgs.dam.blog.dao.Login;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
 import es.joseluisgs.dam.blog.repository.LoginRepository;
 import es.joseluisgs.dam.blog.service.LoginService;

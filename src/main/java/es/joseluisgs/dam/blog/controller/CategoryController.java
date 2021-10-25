@@ -3,6 +3,7 @@ package es.joseluisgs.dam.blog.controller;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
 import es.joseluisgs.dam.blog.repository.CategoryRepository;
 import es.joseluisgs.dam.blog.service.CategoryService;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -41,7 +42,7 @@ public class CategoryController {
         }
     }
 
-    public CategoryDTO getCategoryById(Long id) {
+    public CategoryDTO getCategoryById(ObjectId id) {
         try{
             return categoryService.getCategoryById(id);
         } catch (SQLException e) {
@@ -78,7 +79,7 @@ public class CategoryController {
     }
 
     // Por gusto lo hago con un optional para que lo veas como tratar la excepción con if
-    public Optional<CategoryDTO> getCategoryByIdOptional(Long id) {
+    public Optional<CategoryDTO> getCategoryByIdOptional(ObjectId id) {
         try {
             return Optional.of(categoryService.getCategoryById(id));
         } catch (SQLException e) {

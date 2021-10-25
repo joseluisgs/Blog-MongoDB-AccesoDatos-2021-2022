@@ -1,20 +1,22 @@
 package es.joseluisgs.dam.blog.service;
 
-import es.joseluisgs.dam.blog.dao.Login;
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.model.Login;
+import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
 import es.joseluisgs.dam.blog.mapper.LoginMapper;
 import es.joseluisgs.dam.blog.repository.LoginRepository;
 import es.joseluisgs.dam.blog.repository.UserRepository;
 import es.joseluisgs.dam.blog.utils.Cifrador;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public class LoginService extends BaseService<Login, Long, LoginRepository> {
+public class LoginService extends BaseService<Login, ObjectId, LoginRepository> {
     LoginMapper mapper = new LoginMapper();
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
@@ -36,7 +38,7 @@ public class LoginService extends BaseService<Login, Long, LoginRepository> {
             if ((user != null) && user.getPassword().equals(cif.SHA256(userPassword))) {
                 Login insert = new Login();
                 insert.setId(user.getId());
-                insert.setUltimoAcceso(Timestamp.from(Instant.now()));
+                insert.setUltimoAcceso(LocalDateTime.now());
                 LoginDTO login = mapper.toDTO(repository.save(insert));
                 return login;
             }

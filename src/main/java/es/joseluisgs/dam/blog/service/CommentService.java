@@ -1,19 +1,20 @@
 package es.joseluisgs.dam.blog.service;
 
-import es.joseluisgs.dam.blog.dao.Comment;
+import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.dto.CommentDTO;
 import es.joseluisgs.dam.blog.mapper.CommentMapper;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
 
-public class CommentService extends BaseService<Comment, Long, CommentRepository> {
+public class CommentService extends BaseService<Comment, ObjectId, CommentRepository> {
     CommentMapper mapper = new CommentMapper();
 
     // Inyección de dependencias en el constructor. El servicio necesita este repositorio
@@ -30,13 +31,13 @@ public class CommentService extends BaseService<Comment, Long, CommentRepository
         return result;
     }
 
-    public CommentDTO getCommentById(Long id) throws SQLException {
+    public CommentDTO getCommentById(ObjectId id) throws SQLException {
         CommentDTO commentDTO = mapper.toDTO(this.getById(id));
         return commentDTO;
     }
 
     public CommentDTO postComment(CommentDTO commentDTO) throws SQLException {
-        commentDTO.setFechaPublicacion(Timestamp.from(Instant.now()));
+        commentDTO.setFechaPublicacion(LocalDateTime.now());
         Comment comment = this.save(mapper.fromDTO(commentDTO));
         CommentDTO res = mapper.toDTO(comment);
         return res;

@@ -1,22 +1,22 @@
 package es.joseluisgs.dam.blog.dto;
 
-import es.joseluisgs.dam.blog.dao.Post;
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.model.Post;
+import es.joseluisgs.dam.blog.model.User;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @Builder
 @Getter
 @Setter
 public class CommentDTO {
-    private Long id;
+    private ObjectId id;
     private String texto;
-    private Timestamp fechaPublicacion;
+    private LocalDateTime fechaPublicacion;
     // Autor que la realiza
     private User user;
     // Post al que pertenece

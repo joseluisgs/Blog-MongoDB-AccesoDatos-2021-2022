@@ -1,32 +1,29 @@
 package es.joseluisgs.dam.blog.dto;
 
-import es.joseluisgs.dam.blog.dao.Comment;
-import es.joseluisgs.dam.blog.dao.Post;
+import es.joseluisgs.dam.blog.model.Comment;
+import es.joseluisgs.dam.blog.model.Post;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 
-import java.util.Date;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
 @Builder
 @Getter
 @Setter
-// Exposé expone solo los campso que queramos en el JSON
 public class UserDTO {
     // @Expose
-    private Long id;
+    private ObjectId id;
     // @Expose
     private String nombre;
     // @Expose
     private String email;
     // @Expose
-    private Date fechaRegistro;
+    private LocalDate fechaRegistro;
 
     // TODO Bidireccionalidad
     // Lista de Comentarios
@@ -36,16 +33,9 @@ public class UserDTO {
     // Su login activo si lo tiene
     //private Login login;
 
-    // Eliminar campos de las serialización
+    // Eliminar campos de las serializaciónno ponemos expose
     // https://www.baeldung.com/gson-exclude-fields-serialization
     private String password;
-
-    
-//    @Override
-//    public String toString() {
-//        return this.toJSON();
-//    }
-
 
     @Override
     public String toString() {

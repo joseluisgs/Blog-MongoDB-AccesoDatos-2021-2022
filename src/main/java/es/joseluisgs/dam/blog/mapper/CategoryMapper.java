@@ -1,6 +1,6 @@
 package es.joseluisgs.dam.blog.mapper;
 
-import es.joseluisgs.dam.blog.dao.Category;
+import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
 
 public class CategoryMapper extends BaseMapper<Category, CategoryDTO> {
