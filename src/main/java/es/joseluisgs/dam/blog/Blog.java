@@ -356,53 +356,52 @@ public class Blog {
 
         postDTO1 = postController.postPost(postDTO1);
         System.out.println(postDTO1);
-//
-//        System.out.println("POST Insertando Post 2");
-//
-//        user = lista.get(4).getUser();
-//        category = lista.get(0).getCategory();
-//
-//        PostDTO postDTO2 = PostDTO.builder()
-//                .titulo("Insert Otro 2 " + LocalDateTime.now())
-//                .contenido("Contenido Otro" + Instant.now().toString())
-//                .url("http://" + Math.random() + ".dominio.com")
-//                .user(user)
-//                .category(category)
-//                .build();
-//
-//        postDTO2 = postController.postPost(postDTO2);
-//        System.out.println(postDTO2);
-//
-//        System.out.println("UPDATE Post con ID: " + lista.get(4).getId());
-//        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(lista.get(4).getId());
-//        if (optionalPostDTO.isPresent()) {
-//            optionalPostDTO.get().setTitulo("Update " + LocalDateTime.now());
-//            optionalPostDTO.get().setContenido("emailUpdate" + LocalDateTime.now() + "@mail.com");
-//            System.out.println(postController.updatePost(optionalPostDTO.get()));
-//        }
-//
-//        System.out.println("DELETE Post con ID: " + postDTO2.getId());
-//        // No lo borra por la bidireccionalidad... Hay que borralo de usuario
-//        optionalPostDTO = postController.getPostByIdOptional(postDTO2.getId());
-//        if (optionalPostDTO.isPresent()) {
-//            System.out.println(postController.deletePost(optionalPostDTO.get()));
-//        }
-//
-//        System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
-//        System.out.println(postDTO1.getUser());
-//
-//        System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
-//        // postController.getPostByUserId(postDTO1.getUser().getId()).forEach(System.out::println);
-//        // No deja hacerla porque JPA de Mongo no permite hacer las relaciones en la consulta ;)
-//        // Habria que cambiarlo en el servicio donde se hace esta consulta
-//        PostDTO finalPostDTO = postDTO1;
-//        lista.stream().filter(p -> p.getUser().getId() == finalPostDTO.getUser().getId());
-//
-//        System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
-//        // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
-//        postDTO1.getUser().getPosts().forEach(System.out::println);
-//
-//        System.out.println("FIN POSTS");
+
+        System.out.println("POST Insertando Post 2");
+
+        user = lista.get(4).getUser();
+        category = lista.get(0).getCategory();
+
+        PostDTO postDTO2 = PostDTO.builder()
+                .titulo("Insert Otro 2 " + LocalDateTime.now())
+                .contenido("Contenido Otro" + Instant.now().toString())
+                .url("http://" + Math.random() + ".dominio.com")
+                .user(user)
+                .category(category)
+                .build();
+
+        postDTO2 = postController.postPost(postDTO2);
+        System.out.println(postDTO2);
+
+        System.out.println("UPDATE Post con ID: " + lista.get(4).getId());
+        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(lista.get(4).getId());
+        if (optionalPostDTO.isPresent()) {
+            optionalPostDTO.get().setTitulo("Update " + LocalDateTime.now());
+            optionalPostDTO.get().setContenido("emailUpdate" + LocalDateTime.now() + "@mail.com");
+            System.out.println(postController.updatePost(optionalPostDTO.get()));
+        }
+
+        System.out.println("DELETE Post con ID: " + postDTO2.getId());
+        // No lo borra por la bidireccionalidad... Hay que borralo de usuario
+        optionalPostDTO = postController.getPostByIdOptional(postDTO2.getId());
+        if (optionalPostDTO.isPresent()) {
+            System.out.println(postController.deletePost(optionalPostDTO.get()));
+        }
+
+        System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
+        System.out.println(postDTO1.getUser());
+
+        System.out.println("GET Posts con User ID: " +lista.get(1).getUser().getId() + " usando la Relación Post --> Usuario");
+        postController.getPostByUserId(lista.get(1).getUser().getId()).forEach(System.out::println);
+
+        System.out.println("GET Posts con User ID: " +lista.get(1).getUser().getId() + " usando la Relación Post --> Usuario v2");;
+        lista.stream().filter(p -> p.getUser().getId() == lista.get(1).getUser().getId()).forEach(System.out::println);
+
+        System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
+        // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
+        postDTO1.getUser().getPosts().forEach(System.out::println);
+
+        System.out.println("FIN POSTS");
     }
    /*
     public void Comments() {

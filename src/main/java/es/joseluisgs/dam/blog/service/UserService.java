@@ -56,6 +56,10 @@ public class UserService extends BaseService<User, ObjectId, UserRepository> {
         return usuarioDTO;
     }
 
+    public User getMyUserById(ObjectId id) throws SQLException {
+        return this.getById(id);
+    }
+
     public UserDTO postUser(UserDTO userDTO) throws SQLException {
         // Ciframos antes el password
         userDTO.setPassword(Cifrador.getInstance().SHA256(userDTO.getPassword()));

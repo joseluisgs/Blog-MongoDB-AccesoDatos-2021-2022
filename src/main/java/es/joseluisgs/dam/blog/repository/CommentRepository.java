@@ -6,7 +6,6 @@ import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.model.Comment;
-import es.joseluisgs.dam.blog.model.Post;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -107,5 +106,19 @@ public class CommentRepository implements CrudRespository<Comment, ObjectId> {
         List<Comment> list = commentCollection.find(eq("post", postId)).into(new ArrayList<Comment>());
         mongoController.close();
         return list;
+    }
+
+    public Comment deleteById(ObjectId commentId) throws SQLException {
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Comment> commentCollection = mongoController.getCollection("blog", "comment", Comment.class);
+        try {
+            Document filtered = new Document("_id", commentId);
+            return commentCollection.findOneAndDelete(filtered);
+        } catch (Exception e) {
+            throw new SQLException("Error CommentRepository al eliminar comentario con id: " + commentId + " " + e.getMessage());
+        } finally {
+            mongoController.close();
+        }
     }
 }

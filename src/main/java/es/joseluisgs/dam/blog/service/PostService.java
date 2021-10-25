@@ -1,8 +1,10 @@
 package es.joseluisgs.dam.blog.service;
 
+import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.mapper.PostMapper;
+import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.repository.CategoryRepository;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
 import es.joseluisgs.dam.blog.repository.PostRepository;
@@ -110,7 +112,36 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     }
 
     public PostDTO deletePost(PostDTO postDTO) throws SQLException {
+        // Borramos el post
         Post post = this.delete(mapper.fromDTO(postDTO));
+
+        // Lo borramos de la lista de post del usuario
+        UserService userService = new UserService(new UserRepository());
+        User user = userService.getMyUserById(postDTO.getUser().getId());
+        user.getPosts().remove(post.getId());
+        userService.update(user);
+
+        // Le borramos los comentarios
+        CommentService commentService = new CommentService(new CommentRepository());
+        Set<Comment> comentarios = commentService.getPostComments(post.getId());
+        // Recorremos cada comentario y lo borramos
+        comentarios.forEach(c-> {
+            // Refactorizar que al eliminar comentario lo elimine el comentario del autor
+            try {
+                commentService.deleteCommentByID(c.getId());
+            } catch (SQLException e) {
+                System.err.println("Error PostService eliminar el comentario con ID: " + c.getId());
+            }
+            // Ahora debemos quitarselo a usuario de su lista de comentarios... Es un rollo la bidireccionalidad
+            user.getComments().remove(c.getId());
+            try {
+                userService.update(user);
+            } catch (SQLException e) {
+                System.err.println("Error PostService eliminar al  autor del comentario con ID: " + c.getId());
+            }
+        });
+
+
         return mapper.toDTO(post);
     }
 

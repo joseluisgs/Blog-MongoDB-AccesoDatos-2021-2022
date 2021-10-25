@@ -3,13 +3,10 @@ package es.joseluisgs.dam.blog.service;
 import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.dto.CommentDTO;
 import es.joseluisgs.dam.blog.mapper.CommentMapper;
-import es.joseluisgs.dam.blog.model.Post;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
 import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -63,6 +60,10 @@ public class CommentService extends BaseService<Comment, ObjectId, CommentReposi
 
     public Set<Comment> getPostComments(ObjectId userId) {
         return new HashSet(repository.getByPostId(userId));
+    }
+
+    public Comment deleteCommentByID(ObjectId commentId) throws SQLException {
+        return repository.deleteById(commentId);
     }
 
 //    private User getUserById(Long id) throws SQLException {
