@@ -83,7 +83,7 @@ public class PostController {
         }
     }
 
-    public List<PostDTO> getPostByUserId(Long userId) {
+    public List<PostDTO> getPostByUserId(ObjectId userId) {
         // Vamos a devolver el JSON de las categorías
         return postService.getPostsByUserId(userId);
     }

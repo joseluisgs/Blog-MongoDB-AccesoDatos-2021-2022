@@ -27,9 +27,9 @@ public class UserDTO {
 
     // TODO Bidireccionalidad
     // Lista de Comentarios
-    private Set<Comment> comentarios = new HashSet<>();
+    private Set<Comment> comentarios;
     // Lista de Posts
-    private Set<Post> posts = new HashSet<>();
+    private Set<Post> posts;
     // Su login activo si lo tiene
     //private Login login;
 
@@ -44,7 +44,8 @@ public class UserDTO {
                 ", nombre='" + nombre + '\'' +
                 ", email='" + email + '\'' +
                 ", fechaRegistro=" + fechaRegistro +
-                // ", posts=" + posts + // No voy a imprimir los posts poprque son muy largos
+                ", mis_posts=" + posts + // No voy a imprimir los posts poprque son muy largos
+                ", mis_comentarios=" + comentarios +
                 //", password='" + password + '\'' + // Así no sale el password
                 '}';
     }

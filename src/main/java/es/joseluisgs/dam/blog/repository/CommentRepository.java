@@ -6,6 +6,7 @@ import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
 import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.model.Comment;
+import es.joseluisgs.dam.blog.model.Post;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -88,5 +89,14 @@ public class CommentRepository implements CrudRespository<Comment, ObjectId> {
         } finally {
             mongoController.close();
         }
+    }
+
+    public List<Comment> getByUserId(ObjectId userId) {
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Comment> commentCollection = mongoController.getCollection("blog", "comment", Comment.class);
+        List<Comment> list = commentCollection.find(eq("user", userId)).into(new ArrayList<Comment>());
+        mongoController.close();
+        return list;
     }
 }
