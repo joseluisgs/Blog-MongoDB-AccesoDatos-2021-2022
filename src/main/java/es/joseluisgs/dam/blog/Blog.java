@@ -1,6 +1,8 @@
 package es.joseluisgs.dam.blog;
 
+import es.joseluisgs.dam.blog.controller.CategoryController;
 import es.joseluisgs.dam.blog.database.MongoDBController;
+import es.joseluisgs.dam.blog.dto.CategoryDTO;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Post;
@@ -12,9 +14,8 @@ import es.joseluisgs.dam.blog.repository.UserRepository;
 import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class Blog {
     private static Blog instance;
@@ -197,7 +198,7 @@ public class Blog {
         mongoController.close();
     }
 
-   /* public void Categories() {
+  public void Categories() {
         System.out.println("INICIO CATEGORIAS");
 
         CategoryController categoryController = CategoryController.getInstance();
@@ -242,6 +243,7 @@ public class Blog {
 
         System.out.println("FIN CATEGORIAS");
     }
+      /*
 
     public void Users() {
         System.out.println("INICIO USUARIOS");
