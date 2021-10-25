@@ -237,7 +237,6 @@ public class Blog {
         System.out.println("DELETE Categoría con ID: " + categoryDTO2.getId());
         optionalCategoryDTO = categoryController.getCategoryByIdOptional(categoryDTO2.getId());
         if (optionalCategoryDTO.isPresent()) {
-            System.out.println(optionalCategoryDTO.get());
             System.out.println(categoryController.deleteCategory(optionalCategoryDTO.get()));
         }
 
