@@ -1,14 +1,10 @@
 package es.joseluisgs.dam.blog;
 
-import es.joseluisgs.dam.blog.controller.CategoryController;
-import es.joseluisgs.dam.blog.controller.LoginController;
-import es.joseluisgs.dam.blog.controller.PostController;
-import es.joseluisgs.dam.blog.controller.UserController;
+import es.joseluisgs.dam.blog.controller.*;
 import es.joseluisgs.dam.blog.database.MongoDBController;
-import es.joseluisgs.dam.blog.dto.CategoryDTO;
-import es.joseluisgs.dam.blog.dto.LoginDTO;
-import es.joseluisgs.dam.blog.dto.PostDTO;
-import es.joseluisgs.dam.blog.dto.UserDTO;
+import es.joseluisgs.dam.blog.dto.*;
+import es.joseluisgs.dam.blog.mapper.PostMapper;
+import es.joseluisgs.dam.blog.mapper.UserMapper;
 import es.joseluisgs.dam.blog.model.Category;
 import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.model.Post;
@@ -399,11 +395,13 @@ public class Blog {
 
         System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
         // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
-        postDTO1.getUser().getPosts().forEach(System.out::println);
+        postDTO1.getUser().getPosts().forEach(p -> {
+            System.out.println(postController.getPostById(p));
+        });
 
         System.out.println("FIN POSTS");
     }
-   /*
+
     public void Comments() {
         System.out.println("INICIO COMENTARIOS");
 
@@ -415,77 +413,77 @@ public class Blog {
 
         System.out.println("GET Comentario con ID: " + lista.get(1).getId());
         System.out.println(commentController.getCommentById(lista.get(1).getId()));
-
-        System.out.println("POST Insertando Comentario 1");
-
-        User user = lista.get(0).getUser(); // Sé que el id existe ...
-        // Y un Post
-        Post post = lista.get(0).getPost();
-
-        CommentDTO commentDTO1 = CommentDTO.builder()
-                .texto("Comentario 1 - " + Instant.now().toString())
-                .user(user)
-                .post(post)
-                .build();
-        commentDTO1 = commentController.postComment(commentDTO1);
-        System.out.println(commentDTO1);
-
-        System.out.println("POST Insertando Comentario 2");
-
-        user = lista.get(3).getUser();
-        // Y un Post
-        post = lista.get(3).getPost();
-
-        CommentDTO commentDTO2 = CommentDTO.builder()
-                .texto("Comentario 2 - " + Instant.now().toString())
-                .user(user)
-                .post(post)
-                .build();
-        commentDTO2 = commentController.postComment(commentDTO2);
-        System.out.println(commentDTO2);
-
-        System.out.println("UPDATE Comentario con ID: " + commentDTO1.getId());
-        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO1.getId());
-        if (optionalCommentDTO.isPresent()) {
-            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
-            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
-        }
-
-        System.out.println("DELETE Comentario con ID: " + commentDTO2.getId());
-        optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO2.getId());
-        if (optionalCommentDTO.isPresent()) {
-            System.out.println(commentController.deleteComment(optionalCommentDTO.get()));
-        }
-
-        System.out.println("GET Dado un post ID: " + post.getId() + " Obtener sus Comentarios Post --> Comentarios");
-        // No deja hacerlo porque JPA no permite Join con Mongo
-        // postController.getPostById(2L).getComments().forEach(System.out::println);
-        post.getComments().forEach(System.out::println);
-
-        System.out.println("GET Dado un usuario ID: " + user.getId() + " obtener sus comentarios Usuario --> Comentarios");
-        // JPA en Mongo no permite las Queris con Joins
-        // userController.getUserById(1L).getComentarios().forEach(System.out::println);
-        user.getComments().forEach(System.out::println);
-
-        System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Post Comentario --> Post");
-        // System.out.println(commentController.getCommentById(2L).getPost());
-        System.out.println(commentDTO1.getPost());
-
-        System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Autor Comentario --> Comentario");
-        // System.out.println(commentController.getCommentById(2L).getUser());
-        System.out.println(commentDTO1.getUser());
-
-        System.out.println("DELETE Borrrando un post ID: " + post.getId() + " se borran sus comentarios? Post --> Comentario"); // Cascada
-        PostController postController = PostController.getInstance();
-        PostMapper postMapper = new PostMapper();
-        System.out.println(postController.deletePost(postMapper.toDTO(post)));
-
-        System.out.println("DELETE Borrrando un usuario usuario ID: " + user.getId() + "  se borran comentarios User --> Comentarios"); // Cascada
-        // Cascada de post y de post comentarios
-        UserController userController = UserController.getInstance();
-        UserMapper userMapper = new UserMapper();
-        System.out.println(userController.deleteUser(userMapper.toDTO(user)));
+//
+//        System.out.println("POST Insertando Comentario 1");
+//
+//        User user = lista.get(0).getUser(); // Sé que el id existe ...
+//        // Y un Post
+//        Post post = lista.get(0).getPost();
+//
+//        CommentDTO commentDTO1 = CommentDTO.builder()
+//                .texto("Comentario 1 - " + Instant.now().toString())
+//                .user(user)
+//                .post(post)
+//                .build();
+//        commentDTO1 = commentController.postComment(commentDTO1);
+//        System.out.println(commentDTO1);
+//
+//        System.out.println("POST Insertando Comentario 2");
+//
+//        user = lista.get(3).getUser();
+//        // Y un Post
+//        post = lista.get(3).getPost();
+//
+//        CommentDTO commentDTO2 = CommentDTO.builder()
+//                .texto("Comentario 2 - " + Instant.now().toString())
+//                .user(user)
+//                .post(post)
+//                .build();
+//        commentDTO2 = commentController.postComment(commentDTO2);
+//        System.out.println(commentDTO2);
+//
+//        System.out.println("UPDATE Comentario con ID: " + commentDTO1.getId());
+//        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO1.getId());
+//        if (optionalCommentDTO.isPresent()) {
+//            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
+//            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
+//        }
+//
+//        System.out.println("DELETE Comentario con ID: " + commentDTO2.getId());
+//        optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO2.getId());
+//        if (optionalCommentDTO.isPresent()) {
+//            System.out.println(commentController.deleteComment(optionalCommentDTO.get()));
+//        }
+//
+//        System.out.println("GET Dado un post ID: " + post.getId() + " Obtener sus Comentarios Post --> Comentarios");
+//        // No deja hacerlo porque JPA no permite Join con Mongo
+//        // postController.getPostById(2L).getComments().forEach(System.out::println);
+//        post.getComments().forEach(System.out::println);
+//
+//        System.out.println("GET Dado un usuario ID: " + user.getId() + " obtener sus comentarios Usuario --> Comentarios");
+//        // JPA en Mongo no permite las Queris con Joins
+//        // userController.getUserById(1L).getComentarios().forEach(System.out::println);
+//        user.getComments().forEach(System.out::println);
+//
+//        System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Post Comentario --> Post");
+//        // System.out.println(commentController.getCommentById(2L).getPost());
+//        System.out.println(commentDTO1.getPost());
+//
+//        System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Autor Comentario --> Comentario");
+//        // System.out.println(commentController.getCommentById(2L).getUser());
+//        System.out.println(commentDTO1.getUser());
+//
+//        System.out.println("DELETE Borrrando un post ID: " + post.getId() + " se borran sus comentarios? Post --> Comentario"); // Cascada
+//        PostController postController = PostController.getInstance();
+//        PostMapper postMapper = new PostMapper();
+//        System.out.println(postController.deletePost(postMapper.toDTO(post)));
+//
+//        System.out.println("DELETE Borrrando un usuario usuario ID: " + user.getId() + "  se borran comentarios User --> Comentarios"); // Cascada
+//        // Cascada de post y de post comentarios
+//        UserController userController = UserController.getInstance();
+//        UserMapper userMapper = new UserMapper();
+//        System.out.println(userController.deleteUser(userMapper.toDTO(user)));
 
         System.out.println("FIN COMENTARIOS");
-    }*/
+    }
 }

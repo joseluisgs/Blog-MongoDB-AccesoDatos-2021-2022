@@ -41,7 +41,7 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
         // Recorremos todos los usuarios
         posts.forEach(p -> {
             PostDTO postDTO = mapper.toDTO(p);
-            // Busco sus posts
+            // Busco su usuario
             try {
                 postDTO.setUser(userService.getById(p.getUser()));
             } catch (SQLException e) {
