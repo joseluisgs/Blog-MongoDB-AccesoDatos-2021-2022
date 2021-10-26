@@ -111,6 +111,12 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
         return mapper.toDTO(post);
     }
 
+    public Post updatePost(Post post) throws SQLException {
+        Post res = this.update(post);
+        return res;
+    }
+
+
     public PostDTO deletePost(PostDTO postDTO) throws SQLException {
         // Borramos el post
         Post post = this.delete(mapper.fromDTO(postDTO));

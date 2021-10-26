@@ -80,9 +80,28 @@ public class CommentService extends BaseService<Comment, ObjectId, CommentReposi
 
     public CommentDTO postComment(CommentDTO commentDTO) throws SQLException {
         commentDTO.setFechaPublicacion(LocalDateTime.now());
-        Comment comment = this.save(mapper.fromDTO(commentDTO));
-        CommentDTO res = mapper.toDTO(comment);
-        return res;
+
+        Comment comment = mapper.fromDTO(commentDTO);
+        // Le ponemos el usuario
+        comment.setUser(commentDTO.getUser().getId());
+        // Le ponemos el post
+        comment.setPost(commentDTO.getPost().getId());
+        comment = this.save(comment);
+
+        // No terminamos aqui. A usuario hay que insertarle la categoria
+        commentDTO.getUser().getComments().add(comment.getId());
+        UserService userService = new UserService(new UserRepository());
+        userService.updateUser(commentDTO.getUser());
+
+        // Ademas debemos insertárselo a POST
+        commentDTO.getPost().getComments().add(comment.getId());
+        PostService postService = new PostService(new PostRepository());
+        postService.updatePost(commentDTO.getPost());
+
+        CommentDTO finalComment  = mapper.toDTO(comment);
+        finalComment.setUser(commentDTO.getUser());
+        finalComment.setPost(commentDTO.getPost());
+        return finalComment;
     }
 
     public CommentDTO updateComment(CommentDTO commentDTO) throws SQLException {

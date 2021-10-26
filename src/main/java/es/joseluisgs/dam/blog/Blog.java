@@ -413,20 +413,20 @@ public class Blog {
 
         System.out.println("GET Comentario con ID: " + lista.get(1).getId());
         System.out.println(commentController.getCommentById(lista.get(1).getId()));
-//
-//        System.out.println("POST Insertando Comentario 1");
-//
-//        User user = lista.get(0).getUser(); // Sé que el id existe ...
-//        // Y un Post
-//        Post post = lista.get(0).getPost();
-//
-//        CommentDTO commentDTO1 = CommentDTO.builder()
-//                .texto("Comentario 1 - " + Instant.now().toString())
-//                .user(user)
-//                .post(post)
-//                .build();
-//        commentDTO1 = commentController.postComment(commentDTO1);
-//        System.out.println(commentDTO1);
+
+        System.out.println("POST Insertando Comentario 1");
+
+        User user = lista.get(0).getUser(); // Sé que el id existe ...
+        // Y un Post
+        Post post = lista.get(0).getPost();
+
+        CommentDTO commentDTO1 = CommentDTO.builder()
+                .texto("Comentario 1 - " + Instant.now().toString())
+                .user(user)
+                .post(post)
+                .build();
+        commentDTO1 = commentController.postComment(commentDTO1);
+        System.out.println(commentDTO1);
 //
 //        System.out.println("POST Insertando Comentario 2");
 //
