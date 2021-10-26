@@ -5,6 +5,7 @@ import es.joseluisgs.dam.blog.model.Comment;
 import es.joseluisgs.dam.blog.dto.CommentDTO;
 import es.joseluisgs.dam.blog.mapper.CommentMapper;
 import es.joseluisgs.dam.blog.model.Post;
+import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.repository.CategoryRepository;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
 import es.joseluisgs.dam.blog.repository.PostRepository;
@@ -114,9 +115,21 @@ public class CommentService extends BaseService<Comment, ObjectId, CommentReposi
     }
 
     public CommentDTO deleteComment(CommentDTO commentDTO) throws SQLException {
+        // Borramos el comentario
         Comment comment = this.delete(mapper.fromDTO(commentDTO));
-        CommentDTO res = mapper.toDTO(comment);
-        return res;
+        // Lo borramos de la lista de comentarios del usuario
+        UserService userService = new UserService(new UserRepository());
+        User user = userService.getMyUserById(commentDTO.getUser().getId());
+        user.getComments().remove(comment.getId());
+        userService.update(user);
+
+        // Lo borramos de la lista de comentarios del post
+        PostService postService = new PostService(new PostRepository());
+        Post post = postService.getMyPostByID(commentDTO.getPost().getId());
+        post.getComments().remove(comment.getId());
+        postService.update(post);
+
+        return  mapper.toDTO(comment);
     }
 
     public Set<Comment> getUserComments(ObjectId userId) {

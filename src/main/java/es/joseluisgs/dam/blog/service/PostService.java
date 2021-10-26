@@ -163,4 +163,8 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     public Set<Post> getUserPosts(ObjectId userId) {
         return new HashSet(repository.getByUserId(userId));
     }
+
+    public Post getMyPostByID(ObjectId idPost) throws SQLException {
+        return this.getById(idPost);
+    }
 }

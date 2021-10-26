@@ -30,8 +30,8 @@ public class CommentDTO {
                 "id=" + id +
                 ", texto='" + texto + '\'' +
                 ", fechaPublicacion=" + fechaPublicacion +
-                ", user=" + user +
-                ", post= Post{id:" + post.getId() + ", titulo=" + post.getTitulo() + ", " + "url=" + post.getUrl() +
-                "}}";
+                ", mi_autor=" + user +
+                ", mi_post=" + post +
+                "}";
     }
 }
