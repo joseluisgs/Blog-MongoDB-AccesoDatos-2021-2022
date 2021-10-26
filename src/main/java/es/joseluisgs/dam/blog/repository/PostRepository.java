@@ -1,30 +1,38 @@
 package es.joseluisgs.dam.blog.repository;
 
 
-import es.joseluisgs.dam.blog.dao.Post;
-import es.joseluisgs.dam.blog.manager.HibernateController;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.model.ReturnDocument;
+import es.joseluisgs.dam.blog.database.MongoDBController;
+import es.joseluisgs.dam.blog.model.Post;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
-import javax.persistence.TypedQuery;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PostRepository implements CrudRespository<Post, Long> {
+import static com.mongodb.client.model.Filters.eq;
+
+public class PostRepository implements CrudRespository<Post, ObjectId> {
     @Override
     public List<Post> findAll() {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
-        TypedQuery<Post> query = hc.getManager().createNamedQuery("Post.findAll", Post.class);
-        List<Post> list = query.getResultList();
-        hc.close();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
+        List<Post> list = postCollection.find().into(new ArrayList<Post>());
+        mongoController.close();
         return list;
     }
 
     @Override
-    public Post getById(Long ID) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
-        Post post = hc.getManager().find(Post.class, ID);
-        hc.close();
+    public Post getById(ObjectId ID) throws SQLException {
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
+        Post post = postCollection.find(eq("_id", ID)).first();
+        mongoController.close();
         if (post != null)
             return post;
         throw new SQLException("Error PostRepository no existe post con ID: " + ID);
@@ -32,74 +40,57 @@ public class PostRepository implements CrudRespository<Post, Long> {
 
     @Override
     public Post save(Post post) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
         try {
-            hc.getTransaction().begin();
-            hc.getManager().persist(post);
-            hc.getTransaction().commit();
+            postCollection.insertOne(post);
             return post;
         } catch (Exception e) {
             throw new SQLException("Error PostRepository al insertar post en BD: " + e.getMessage());
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 
     @Override
     public Post update(Post post) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
         try {
-            hc.getTransaction().begin();
-            hc.getManager().merge(post);
-            hc.getTransaction().commit();
-            return post;
+            Document filtered = new Document("_id", post.getId());
+            FindOneAndReplaceOptions returnDoc = new FindOneAndReplaceOptions().returnDocument(ReturnDocument.AFTER);
+            return postCollection.findOneAndReplace(filtered, post, returnDoc);
         } catch (Exception e) {
             throw new SQLException("Error PostRepository al actualizar post con id: " + post.getId() + " " + e.getMessage());
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
 
     }
 
     @Override
     public Post delete(Post post) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
         try {
-            hc.getTransaction().begin();
-            // Ojo que borrar implica que estemos en la misma sesión y nos puede dar problemas, por eso lo recuperamos otra vez
-            post = hc.getManager().find(Post.class, post.getId());
-            hc.getManager().remove(post);
-            hc.getTransaction().commit();
-            return post;
+            Document filtered = new Document("_id", post.getId());
+            return postCollection.findOneAndDelete(filtered);
         } catch (Exception e) {
             throw new SQLException("Error PostRepository al eliminar post con id: " + post.getId() + " " + e.getMessage());
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 
-    public List<Post> getByUserId(Long userId) {
-        // Aquí habria que cambiar la consulta porque JPA no deja hacer NamedQuerys con Join en Mongo
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
-        // Vamos a cambiar la consulta, par facilitar las cosas a JPA
-//        List<Post> list = hc.getManager().createNamedQuery("Post.getByUserId", Post.class)
-//                .setParameter("userId", userId).getResultList();
-        List<Post> list = hc.getManager().createNamedQuery("User.getMyPosts", Post.class)
-                .setParameter("userId", userId).getResultList();
-        hc.close();
+    public List<Post> getByUserId(ObjectId userId) {
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Post> postCollection = mongoController.getCollection("blog", "post", Post.class);
+        List<Post> list = postCollection.find(eq("user", userId)).into(new ArrayList<Post>());
+        mongoController.close();
         return list;
     }
 

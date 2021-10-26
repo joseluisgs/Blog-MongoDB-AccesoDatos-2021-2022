@@ -1,24 +1,24 @@
 package es.joseluisgs.dam.blog.dto;
 
-import es.joseluisgs.dam.blog.dao.Category;
-import es.joseluisgs.dam.blog.dao.Comment;
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.model.Category;
+import es.joseluisgs.dam.blog.model.Comment;
+import es.joseluisgs.dam.blog.model.User;
 import lombok.Builder;
 import lombok.Data;
+import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
 @Builder
 public class PostDTO {
 
-    private Long id;
+    private ObjectId id;
     private String titulo;
     private String url;
     private String contenido;
-    private Timestamp fechaPublicacion;
+    private LocalDateTime fechaPublicacion;
     // Autor
     private User user;
     // Categoría a la que pertenece

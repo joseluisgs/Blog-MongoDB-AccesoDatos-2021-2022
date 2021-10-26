@@ -1,17 +1,17 @@
 package es.joseluisgs.dam.blog.dto;
 
-import es.joseluisgs.dam.blog.dao.User;
 import lombok.Builder;
 import lombok.Data;
+import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @Data
 @Builder
 public class LoginDTO {
-    private long id;
-    private Timestamp ultimoAcceso;
+    private ObjectId id;
+    private LocalDateTime ultimoAcceso;
     private String token;
 
     @Override

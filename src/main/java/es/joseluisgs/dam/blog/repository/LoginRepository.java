@@ -1,41 +1,39 @@
 package es.joseluisgs.dam.blog.repository;
 
-import es.joseluisgs.dam.blog.dao.Login;
-import es.joseluisgs.dam.blog.manager.HibernateController;
+import com.mongodb.client.MongoCollection;
+import es.joseluisgs.dam.blog.database.MongoDBController;
+import es.joseluisgs.dam.blog.model.Login;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class LoginRepository implements CrudRespository<Login, Long> {
+public class LoginRepository implements CrudRespository<Login, ObjectId> {
     @Override
     public List<Login> findAll() throws SQLException {
         throw new SQLException("Error: Método findAll no implementado");
     }
 
     @Override
-    public Login getById(Long aLong) throws SQLException {
+    public Login getById(ObjectId aLong) throws SQLException {
         throw new SQLException("Error: Método getById  no implementado");
     }
 
     @Override
     public Login save(Login login) throws SQLException {
         UUID uuid = UUID.randomUUID();
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Login> loginCollection = mongoController.getCollection("blog", "login", Login.class);
         try {
-            hc.getTransaction().begin();
-            login.setToken(uuid.toString());
-            hc.getManager().persist(login);
-            hc.getTransaction().commit();
+            loginCollection.insertOne(login);
             return login;
         } catch (Exception e) {
             throw new SQLException("Error LoginRepository al insertar login en BD");
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 
@@ -49,24 +47,22 @@ public class LoginRepository implements CrudRespository<Login, Long> {
         throw new SQLException("Error: Método update no implementado");
     }
 
-    public boolean deleteByUserId(Long userId) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+    public boolean deleteByUserId(ObjectId userId) throws SQLException {
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<Login> loginCollection  = mongoController.getCollection("blog", "login", Login.class);
         try {
-            hc.getTransaction().begin();
-            // Ojo que borrar implica que estemos en la misma sesión y nos puede dar problemas, por eso lo recuperamos otra vez
-            Login login = hc.getManager().find(Login.class, userId);
-            // System.out.println(login);
-            hc.getManager().remove(login);
-            hc.getTransaction().commit();
-            return true;
+            Document filtered = new Document("_id", userId);
+            Login login = loginCollection.findOneAndDelete(filtered);
+            if (login != null) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             throw new SQLException("Error LoginRepository al eliminar login con id: " + userId);
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 

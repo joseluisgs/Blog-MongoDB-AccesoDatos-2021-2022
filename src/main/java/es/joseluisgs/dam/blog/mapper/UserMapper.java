@@ -1,10 +1,7 @@
 package es.joseluisgs.dam.blog.mapper;
 
-import es.joseluisgs.dam.blog.dao.Post;
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.model.User;
 import es.joseluisgs.dam.blog.dto.UserDTO;
-
-import java.util.List;
 
 public class UserMapper extends BaseMapper<User, UserDTO> {
     @Override
@@ -17,8 +14,8 @@ public class UserMapper extends BaseMapper<User, UserDTO> {
         user.setEmail(item.getEmail());
         user.setPassword(item.getPassword());
         user.setFechaRegistro(item.getFechaRegistro());
-        user.setPosts(item.getPosts());
-        user.setComments(item.getComentarios());
+        //user.setPosts(item.getPosts());
+        //user.setComments(item.getComentarios());
         return user;
     }
 
@@ -30,8 +27,8 @@ public class UserMapper extends BaseMapper<User, UserDTO> {
                 .email(item.getEmail())
                 .password(item.getPassword())
                 .fechaRegistro(item.getFechaRegistro())
-                .posts(item.getPosts())
-                .comentarios(item.getComments())
+                //.posts(item.getPosts())
+                //.comentarios(item.getComments())
                 .build();
     }
 }

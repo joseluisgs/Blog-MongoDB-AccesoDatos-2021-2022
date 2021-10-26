@@ -61,7 +61,7 @@ MongoDB guarda estructuras de datos BSON (una especificación similar a JSON) co
 
 ## Diagrama de la Persistencia 
 El diagrama de la persistencia generada puede verse en esta imagen.
-![diagrama](./diagrams/Persistence.png);
+![diagrama](./diagrams/Persistence.png)
 
 ## Ejecución
 ### Docker

@@ -1,9 +1,9 @@
 package es.joseluisgs.dam.blog.controller;
 
 import es.joseluisgs.dam.blog.dto.CommentDTO;
-import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
 import es.joseluisgs.dam.blog.service.CommentService;
+import org.bson.types.ObjectId;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -38,7 +38,7 @@ public class CommentController {
         }
     }
 
-    public CommentDTO getCommentById(Long id) {
+    public CommentDTO getCommentById(ObjectId id) {
         try {
             return commentService.getCommentById(id);
         } catch (SQLException e) {
@@ -74,7 +74,7 @@ public class CommentController {
         }
     }
 
-    public Optional<CommentDTO> getCommentByIdOptional(Long id) {
+    public Optional<CommentDTO> getCommentByIdOptional(ObjectId id) {
         try {
             return Optional.of(commentService.getCommentById(id));
         } catch (SQLException e) {

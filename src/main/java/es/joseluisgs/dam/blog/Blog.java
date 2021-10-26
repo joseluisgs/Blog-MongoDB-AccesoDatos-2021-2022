@@ -1,33 +1,24 @@
 package es.joseluisgs.dam.blog;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import es.joseluisgs.dam.blog.controller.*;
-import es.joseluisgs.dam.blog.dao.Category;
-import es.joseluisgs.dam.blog.dao.Comment;
-import es.joseluisgs.dam.blog.dao.Post;
-import es.joseluisgs.dam.blog.dao.User;
+import es.joseluisgs.dam.blog.database.MongoDBController;
 import es.joseluisgs.dam.blog.dto.*;
-import es.joseluisgs.dam.blog.manager.HibernateController;
-import es.joseluisgs.dam.blog.mapper.CategoryMapper;
 import es.joseluisgs.dam.blog.mapper.PostMapper;
 import es.joseluisgs.dam.blog.mapper.UserMapper;
+import es.joseluisgs.dam.blog.model.Category;
+import es.joseluisgs.dam.blog.model.Comment;
+import es.joseluisgs.dam.blog.model.Post;
+import es.joseluisgs.dam.blog.model.User;
+import es.joseluisgs.dam.blog.repository.CategoryRepository;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
-import es.joseluisgs.dam.blog.service.CommentService;
-import org.bson.Document;
+import es.joseluisgs.dam.blog.repository.PostRepository;
+import es.joseluisgs.dam.blog.repository.UserRepository;
+import org.bson.types.ObjectId;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Blog {
     private static Blog instance;
@@ -46,102 +37,171 @@ public class Blog {
         // Borramos los datos previos
         removeData();
 
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
         // Categorías
-         hc.getTransaction().begin();
-        Category c1 = new Category("General"); // 1
-        Category c2 = new Category("Dudas");  // 2
-        Category c3 = new Category("Evaluación"); // 3
-        Category c4 = new Category("Pruebas"); // 4
-
-        hc.getManager().persist(c1);
-        hc.getManager().persist(c2);
-        hc.getManager().persist(c3);
-        hc.getManager().persist(c4);
-
-        hc.getTransaction().commit();
+        System.out.println("Insertando Categorías de Ejemplo");
+        CategoryRepository categoryRepository = new CategoryRepository();
+        Category c1 = new Category("General");
+        Category c2 = new Category("Dudas");
+        Category c3 = new Category("Evaluación");
+        Category c4 = new Category("Pruebas");
+        try {
+            categoryRepository.save(c1);
+            categoryRepository.save(c2);
+            categoryRepository.save(c3);
+            categoryRepository.save(c4);
+        } catch (SQLException e) {
+           System.err.println("Error al insertar datos de ejemplo de Categorías: " + e.getMessage());
+        }
 
         // Usuarios
         System.out.println("Insertando Usuarios de Ejemplo");
+        UserRepository userRepository = new UserRepository();
+        User u1 = new User("Pepe Perez","pepe@pepe.es","1234");
+        User u2 = new User("Ana Anaya","ana@anaya.es","1234");
+        User u3 = new User("Paco Perez","paco@perez.es","1234");
+        User u4 = new User("Son Goku","goku@dragonball.es","1234");
+        User u5 = new User("Chuck Norris","chuck@norris.es","1234");
 
-        hc.getTransaction().begin();
-        User u1 = new User("Pepe Perez","pepe@pepe.es","1234"); // 5
-        User u2 = new User("Ana Anaya","ana@anaya.es","1234"); // 6
-        User u3 = new User("Paco Perez","paco@perez.es","1234"); // 7
-        User u4 = new User("Son Goku","goku@dragonball.es","1234"); // 8
-        User u5 = new User("Chuck Norris","chuck@norris.es","1234");  // 9
-
-        hc.getManager().persist(u1);
-        hc.getManager().persist(u2);
-        hc.getManager().persist(u3);
-        hc.getManager().persist(u4);
-        hc.getManager().persist(u5);
-
-        hc.getTransaction().commit();
+        try {
+            userRepository.save(u1);
+            userRepository.save(u2);
+            userRepository.save(u3);
+            userRepository.save(u4);
+            userRepository.save(u5);
+        } catch (SQLException e) {
+            System.err.println("Error al insertar datos de ejemplo de Usuarios: " + e.getMessage());
+        }
 
         // Post
         System.out.println("Insertando Post de Ejemplo");
+        PostRepository postRepository = new PostRepository();
+        Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1.getId(), c1.getId());
+        Post p2 = new Post("Post num 2", "http://post2.com", "Este es el post num 2", u2.getId(), c2.getId());
+        Post p3 = new Post("Post num 3", "http://post3.com", "Este es el post num 3", u3.getId(), c3.getId());
+        Post p4 = new Post("Post num 4", "http://post4.com", "Este es el post num 4", u1.getId(), c1.getId());
+        Post p5 = new Post("Post num 5", "http://post5.com", "Este es el post num 5", u2.getId(), c3.getId());
 
-        hc.getTransaction().begin();
-        Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1, c1); //10
-        Post p2 = new Post("Post num 2", "http://post2.com", "Este es el post num 1", u2, c2); //11
-        Post p3 = new Post("Post num 3", "http://post3.com", "Este es el post num 1", u3, c3); //12
-        Post p4 = new Post("Post num 4", "http://post4.com", "Este es el post num 1", u1, c1); //13
-        Post p5 = new Post("Post num 5", "http://post5.com", "Este es el post num 1", u2, c3); //14
+        try {
+            postRepository.save(p1);
+            postRepository.save(p2);
+            postRepository.save(p3);
+            postRepository.save(p4);
+            postRepository.save(p5);
 
-        hc.getManager().persist(p1);
-        hc.getManager().persist(p2);
-        hc.getManager().persist(p3);
-        hc.getManager().persist(p4);
-        hc.getManager().persist(p5);
+            // Actualizamos los usaurios, bidireccionalidad
+            Set<ObjectId> posts = new HashSet<>();
+            // usuario 1
+            posts.add(p1.getId());
+            posts.add(p4.getId());
+            u1.setPosts(posts);
+            userRepository.update(u1);
+            //Usuario 2
+            posts = new HashSet<>();
+            posts.add(p2.getId());
+            posts.add(p5.getId());
+            u2.setPosts(posts);
+            userRepository.update(u2);
+            //Usuario 3
+            posts = new HashSet<>();
+            posts.add(p3.getId());
+            u3.setPosts(posts);
+            userRepository.update(u3);
 
-        hc.getTransaction().commit();
+        } catch (SQLException e) {
+            System.err.println("Error al insertar datos de ejemplo de Posts: " + e.getMessage());
+        }
 
         // Comentarios
         System.out.println("Insertando Comentarios de Ejemplo");
+        CommentRepository commentRepository = new CommentRepository();
 
-        hc.getTransaction().begin();
-        Comment cm1 = new Comment("Comentario 01,", u1, p1);//15
-        Comment cm2 = new Comment("Comentario 02,", u2, p2);//16
-        Comment cm3 = new Comment("Comentario 03,", u3, p2);//17
-        Comment cm4 = new Comment("Comentario 04,", u1, p3);//18
-        Comment cm5 = new Comment("Comentario 05,", u4, p4);//19
-        Comment cm6 = new Comment("Comentario 06,", u1, p3);//20
-        Comment cm7 = new Comment("Comentario 07,", u4, p4);//21
-        Comment cm8 = new Comment("Comentario 08,", u2, p3);//22
 
-        hc.getManager().persist(cm1);
-        hc.getManager().persist(cm2);
-        hc.getManager().persist(cm3);
-        hc.getManager().persist(cm4);
-        hc.getManager().persist(cm5);
-        hc.getManager().persist(cm6);
-        hc.getManager().persist(cm7);
-        hc.getManager().persist(cm8);
+        Comment cm1 = new Comment("Comentario 01,", u1.getId(), p1.getId());
+        Comment cm2 = new Comment("Comentario 02,", u2.getId(), p2.getId());
+        Comment cm3 = new Comment("Comentario 03,", u3.getId(), p2.getId());
+        Comment cm4 = new Comment("Comentario 04,", u1.getId(), p3.getId());
+        Comment cm5 = new Comment("Comentario 05,", u4.getId(), p4.getId());
+        Comment cm6 = new Comment("Comentario 06,", u1.getId(), p3.getId());
+        Comment cm7 = new Comment("Comentario 07,", u4.getId(), p4.getId());
+        Comment cm8 = new Comment("Comentario 08,", u2.getId(), p3.getId());
 
-        hc.getTransaction().commit();
+        try {
+            commentRepository.save(cm1);
+            commentRepository.save(cm2);
+            commentRepository.save(cm3);
+            commentRepository.save(cm4);
+            commentRepository.save(cm5);
+            commentRepository.save(cm6);
+            commentRepository.save(cm7);
+            commentRepository.save(cm8);
 
-        hc.close();
+            // Actualizamos los usaurios, bidireccionalidad
+            Set<ObjectId> comments = new HashSet<>();
+            // usuario 1
+            comments.add(cm1.getId());
+            comments.add(cm4.getId());
+            comments.add(cm6.getId());
+            u1.setComments(comments);
+            userRepository.update(u1);
+            //Usuario 2
+            comments = new HashSet<>();
+            comments.add(cm2.getId());
+            comments.add(cm8.getId());
+            u2.setComments(comments);
+            userRepository.update(u2);
+            //Usuario 3
+            comments = new HashSet<>();
+            comments.add(cm3.getId());
+            u3.setComments(comments);
+            userRepository.update(u3);
+            //Usuario 4
+            comments = new HashSet<>();
+            comments.add(cm5.getId());
+            comments.add(cm7.getId());
+            u4.setComments(comments);
+            userRepository.update(u4);
+
+            // Actualizamos los Post, bidireccionalidad
+            // Post 1
+            comments = new HashSet<>();
+            comments.add(cm1.getId());
+            p1.setComments(comments);
+            postRepository.update(p1);
+            // Post 2
+            comments = new HashSet<>();
+            comments.add(cm2.getId());
+            comments.add(cm3.getId());
+            p2.setComments(comments);
+            postRepository.update(p2);
+            // Post 3
+            comments = new HashSet<>();
+            comments.add(cm4.getId());
+            comments.add(cm6.getId());
+            comments.add(cm8.getId());
+            p3.setComments(comments);
+            postRepository.update(p3);
+            // Post 4
+            comments = new HashSet<>();
+            comments.add(cm5.getId());
+            comments.add(cm7.getId());;
+            p4.setComments(comments);
+            postRepository.update(p4);
+
+        } catch (SQLException e) {
+            System.err.println("Error al insertar datos de ejemplo de Comentarios: " + e.getMessage());
+        }
+
 
     }
 
     private void removeData() {
-        // Usando Hibernate
-//        transactionManager.begin();
-//        // Collection == name of the class being saved ⮧
-//        entityManager.createNativeQuery("db.GameCharacter.drop()").executeUpdate();
-//        transactionManager.commit();
-        // Lo sutyo sería un controlador
-        ConnectionString connectionString = new ConnectionString("mongodb://mongoadmin:mongopass@localhost/test?authSource=admin");
-        MongoClient mongoClient = MongoClients.create(connectionString);
-
-       // Obtenemos la base de datos que necesitamos
-        MongoDatabase blogDB = mongoClient.getDatabase("blog");
-        blogDB.drop(); // Si queremos borrar toda la base de datos
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        mongoController.removeDataBase("blog");
+        mongoController.close();
     }
 
-    public void Categories() {
+  public void Categories() {
         System.out.println("INICIO CATEGORIAS");
 
         CategoryController categoryController = CategoryController.getInstance();
@@ -180,7 +240,6 @@ public class Blog {
         System.out.println("DELETE Categoría con ID: " + categoryDTO2.getId());
         optionalCategoryDTO = categoryController.getCategoryByIdOptional(categoryDTO2.getId());
         if (optionalCategoryDTO.isPresent()) {
-            System.out.println(optionalCategoryDTO.get());
             System.out.println(categoryController.deleteCategory(optionalCategoryDTO.get()));
         }
 
@@ -255,12 +314,12 @@ public class Blog {
         System.out.println("Login con un usario que NO existe o mal Password datos correctos");
         login2 = loginController.login("pepe@pepe2.es", "12555");
         System.out.println(login2.isPresent() ? "Login OK" : "Usuario o password incorrectos");
+        System.out.println("Logout de usuario que está logueado");
 
-        // System.out.println("Logout de usuario que está logueado");
-        // System.out.println(loginController.logout(login.get().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
+        System.out.println(loginController.logout(login.get().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
 
-       System.out.println("Logout de usuario que no está logueado");
-      System.out.println(loginController.logout(99999999L)? "Logout OK" : "Usuarios no logueado en el sistema");
+        System.out.println("Logout de usuario que no está logueado");
+        System.out.println(loginController.logout(new ObjectId())? "Logout OK" : "Usuarios no logueado en el sistema");
 
         System.out.println("FIN LOGIN");
     }
@@ -273,7 +332,6 @@ public class Blog {
         System.out.println("GET Todos los Post");
         List<PostDTO> lista = postController.getAllPost();
         System.out.println(lista);
-
         System.out.println("GET Post con ID: " + lista.get(1).getId());
         System.out.println(postController.getPostById(lista.get(1).getId()));
 
@@ -329,16 +387,17 @@ public class Blog {
         System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
         System.out.println(postDTO1.getUser());
 
-        System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
-        // postController.getPostByUserId(postDTO1.getUser().getId()).forEach(System.out::println);
-        // No deja hacerla porque JPA de Mongo no permite hacer las relaciones en la consulta ;)
-        // Habria que cambiarlo en el servicio donde se hace esta consulta
-        PostDTO finalPostDTO = postDTO1;
-        lista.stream().filter(p -> p.getUser().getId() == finalPostDTO.getUser().getId());
+        System.out.println("GET Posts con User ID: " +lista.get(1).getUser().getId() + " usando la Relación Post --> Usuario");
+        postController.getPostByUserId(lista.get(1).getUser().getId()).forEach(System.out::println);
+
+        System.out.println("GET Posts con User ID: " +lista.get(1).getUser().getId() + " usando la Relación Post --> Usuario v2");;
+        lista.stream().filter(p -> p.getUser().getId() == lista.get(1).getUser().getId()).forEach(System.out::println);
 
         System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
         // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
-        postDTO1.getUser().getPosts().forEach(System.out::println);
+        postDTO1.getUser().getPosts().forEach(p -> {
+            System.out.println(postController.getPostById(p));
+        });
 
         System.out.println("FIN POSTS");
     }
@@ -397,33 +456,34 @@ public class Blog {
         }
 
         System.out.println("GET Dado un post ID: " + post.getId() + " Obtener sus Comentarios Post --> Comentarios");
-        // No deja hacerlo porque JPA no permite Join con Mongo
-        // postController.getPostById(2L).getComments().forEach(System.out::println);
+        PostController postController = PostController.getInstance();
+        postController.getPostById(post.getId()).getComments().forEach(System.out::println);
+
+        // Otra forma
+        // Recorriendo con el foreach y buscando los datos con commentController, ya lo hemos hecho más arriba
         post.getComments().forEach(System.out::println);
 
+
         System.out.println("GET Dado un usuario ID: " + user.getId() + " obtener sus comentarios Usuario --> Comentarios");
-        // JPA en Mongo no permite las Queris con Joins
-        // userController.getUserById(1L).getComentarios().forEach(System.out::println);
+        UserController userController = UserController.getInstance();
+        userController.getUserById(user.getId()).getComentarios().forEach(System.out::println);
+        // Recorriendo con el foreach y buscando los datos con commentController, ya lo hemos hecho más arriba
         user.getComments().forEach(System.out::println);
 
         System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Post Comentario --> Post");
-        // System.out.println(commentController.getCommentById(2L).getPost());
+        //System.out.println(commentController.getCommentById(commentDTO1.getId() ).getPost());
         System.out.println(commentDTO1.getPost());
 
         System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Autor Comentario --> Comentario");
         // System.out.println(commentController.getCommentById(2L).getUser());
         System.out.println(commentDTO1.getUser());
 
-        System.out.println("DELETE Borrrando un post ID: " + post.getId() + " se borran sus comentarios? Post --> Comentario"); // Cascada
-        PostController postController = PostController.getInstance();
-        PostMapper postMapper = new PostMapper();
-        System.out.println(postController.deletePost(postMapper.toDTO(post)));
 
-        System.out.println("DELETE Borrrando un usuario usuario ID: " + user.getId() + "  se borran comentarios User --> Comentarios"); // Cascada
-        // Cascada de post y de post comentarios
-        UserController userController = UserController.getInstance();
-        UserMapper userMapper = new UserMapper();
-        System.out.println(userController.deleteUser(userMapper.toDTO(user)));
+        System.out.println("DELETE Borrrando un post ID: " + postController.getAllPost().get(1).getId() + " se borran sus comentarios? Post --> Comentario"); // Cascada
+        System.out.println(postController.deletePost(postController.getAllPost().get(1)));
+
+        System.out.println("DELETE Borrrando un usuario usuario ID: " + userController.getAllUsers().get(1).getId() + "  se borran comentarios User --> Comentarios"); // Cascada
+        System.out.println(userController.deleteUser(userController.getAllUsers().get(1)));
 
         System.out.println("FIN COMENTARIOS");
     }

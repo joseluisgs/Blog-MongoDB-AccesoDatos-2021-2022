@@ -1,6 +1,5 @@
 package es.joseluisgs.dam.blog;
 
-import es.joseluisgs.dam.blog.manager.HibernateController;
 import es.joseluisgs.dam.blog.utils.ApplicationProperties;
 
 public class App {
@@ -23,7 +22,7 @@ public class App {
         blog.Users();
 
         // Login
-       blog.Login();
+        blog.Login();
 
         // Posts
         blog.Posts();

@@ -1,30 +1,38 @@
 package es.joseluisgs.dam.blog.repository;
 
 
-import es.joseluisgs.dam.blog.dao.User;
-import es.joseluisgs.dam.blog.manager.HibernateController;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.model.ReturnDocument;
+import es.joseluisgs.dam.blog.database.MongoDBController;
+import es.joseluisgs.dam.blog.model.User;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
-import javax.persistence.TypedQuery;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepository implements CrudRespository<User, Long> {
+import static com.mongodb.client.model.Filters.eq;
+
+public class UserRepository implements CrudRespository<User, ObjectId> {
     @Override
     public List<User> findAll() {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
-        TypedQuery<User> query = hc.getManager().createNamedQuery("User.findAll", User.class);
-        List<User> list = query.getResultList();
-        hc.close();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<User> userCollection = mongoController.getCollection("blog", "user", User.class);
+        List<User> list = userCollection.find().into(new ArrayList<User>());
+        mongoController.close();
         return list;
     }
 
     @Override
-    public User getById(Long ID) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
-        User user = hc.getManager().find(User.class, ID);
-        hc.close();
+    public User getById(ObjectId ID) throws SQLException {
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<User> userCollection = mongoController.getCollection("blog", "user", User.class);
+        User user = userCollection.find(eq("_id", ID)).first();
+        mongoController.close();
         if (user != null)
             return user;
         throw new SQLException("Error UserRepository no existe usuario con ID: " + ID);
@@ -32,72 +40,58 @@ public class UserRepository implements CrudRespository<User, Long> {
 
     @Override
     public User save(User user) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<User> userCollection = mongoController.getCollection("blog", "user", User.class);
         try {
-            hc.getTransaction().begin();
-            hc.getManager().persist(user);
-            hc.getTransaction().commit();
+            userCollection.insertOne(user);
             return user;
         } catch (Exception e) {
             throw new SQLException("Error UserRepository al insertar usuario en BD:" + e.getMessage());
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 
     @Override
     public User update(User user) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<User> userCollection = mongoController.getCollection("blog", "user", User.class);
         try {
-            hc.getTransaction().begin();
-            hc.getManager().merge(user);
-            hc.getTransaction().commit();
-            return user;
+            Document filtered = new Document("_id", user.getId());
+            FindOneAndReplaceOptions returnDoc = new FindOneAndReplaceOptions().returnDocument(ReturnDocument.AFTER);
+            return userCollection.findOneAndReplace(filtered, user, returnDoc);
         } catch (Exception e) {
             throw new SQLException("Error UserRepository al actualizar usuario con id: " + user.getId() + ": " + e.getMessage());
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
 
     }
 
     @Override
     public User delete(User user) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<User> userCollection = mongoController.getCollection("blog", "user", User.class);
         try {
-            hc.getTransaction().begin();
-            // Ojo que borrar implica que estemos en la misma sesión y nos puede dar problemas, por eso lo recuperamos otra vez
-            user = hc.getManager().find(User.class, user.getId());
-            hc.getManager().remove(user);
-            hc.getTransaction().commit();
-            return user;
+            Document filtered = new Document("_id", user.getId());
+            return userCollection.findOneAndDelete(filtered);
         } catch (Exception e) {
             throw new SQLException("Error UserRepository al eliminar usuario con id: " + user.getId() + ": " + e.getMessage());
         } finally {
-            if (hc.getTransaction().isActive()) {
-                hc.getTransaction().rollback();
-            }
-            hc.close();
+            mongoController.close();
         }
     }
 
     public User getByEmail(String userMail) throws SQLException {
-        HibernateController hc = HibernateController.getInstance();
-        hc.open();
+        MongoDBController mongoController = MongoDBController.getInstance();
+        mongoController.open();
+        MongoCollection<User> userCollection = mongoController.getCollection("blog", "user", User.class);
 
-        User user = hc.getManager().createNamedQuery("User.getByMail", User.class)
-                .setParameter("email", userMail)
-                .getSingleResult();
-        hc.close();
+        User user = userCollection.find(eq("email", userMail)).first();
+        mongoController.close();
         if (user != null)
             return user;
 
