@@ -106,7 +106,10 @@ public class CommentService extends BaseService<Comment, ObjectId, CommentReposi
 
     public CommentDTO updateComment(CommentDTO commentDTO) throws SQLException {
         Comment comment = this.update(mapper.fromDTO(commentDTO));
+        // Le ponemos el usuario y foro
         CommentDTO res = mapper.toDTO(comment);
+        res.setUser(commentDTO.getUser());
+        res.setPost(commentDTO.getPost());
         return res;
     }
 

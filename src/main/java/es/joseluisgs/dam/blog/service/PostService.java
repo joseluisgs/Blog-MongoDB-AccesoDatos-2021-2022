@@ -107,8 +107,12 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     }
 
     public PostDTO updatePost(PostDTO postDTO) throws SQLException {
+        // Buscar usuario y categorias
         Post post = this.update(mapper.fromDTO(postDTO));
-        return mapper.toDTO(post);
+        PostDTO res = mapper.toDTO(post);
+        res.setUser(postDTO.getUser());
+        res.setCategory(postDTO.getCategory());
+        return res;
     }
 
     public Post updatePost(Post post) throws SQLException {

@@ -427,27 +427,27 @@ public class Blog {
                 .build();
         commentDTO1 = commentController.postComment(commentDTO1);
         System.out.println(commentDTO1);
-//
-//        System.out.println("POST Insertando Comentario 2");
-//
-//        user = lista.get(3).getUser();
-//        // Y un Post
-//        post = lista.get(3).getPost();
-//
-//        CommentDTO commentDTO2 = CommentDTO.builder()
-//                .texto("Comentario 2 - " + Instant.now().toString())
-//                .user(user)
-//                .post(post)
-//                .build();
-//        commentDTO2 = commentController.postComment(commentDTO2);
-//        System.out.println(commentDTO2);
-//
-//        System.out.println("UPDATE Comentario con ID: " + commentDTO1.getId());
-//        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO1.getId());
-//        if (optionalCommentDTO.isPresent()) {
-//            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
-//            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
-//        }
+
+        System.out.println("POST Insertando Comentario 2");
+
+        user = lista.get(3).getUser();
+        // Y un Post
+        post = lista.get(3).getPost();
+
+        CommentDTO commentDTO2 = CommentDTO.builder()
+                .texto("Comentario 2 - " + Instant.now().toString())
+                .user(user)
+                .post(post)
+                .build();
+        commentDTO2 = commentController.postComment(commentDTO2);
+        System.out.println(commentDTO2);
+
+        System.out.println("UPDATE Comentario con ID: " + commentDTO1.getId());
+        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO1.getId());
+        if (optionalCommentDTO.isPresent()) {
+            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
+            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
+        }
 //
 //        System.out.println("DELETE Comentario con ID: " + commentDTO2.getId());
 //        optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO2.getId());
