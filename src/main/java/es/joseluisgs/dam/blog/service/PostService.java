@@ -41,7 +41,7 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
         // Recorremos todos los usuarios
         posts.forEach(p -> {
             PostDTO postDTO = mapper.toDTO(p);
-            // Busco sus posts
+            // Busco su usuario
             try {
                 postDTO.setUser(userService.getById(p.getUser()));
             } catch (SQLException e) {
@@ -107,9 +107,19 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
     }
 
     public PostDTO updatePost(PostDTO postDTO) throws SQLException {
+        // Buscar usuario y categorias
         Post post = this.update(mapper.fromDTO(postDTO));
-        return mapper.toDTO(post);
+        PostDTO res = mapper.toDTO(post);
+        res.setUser(postDTO.getUser());
+        res.setCategory(postDTO.getCategory());
+        return res;
     }
+
+    public Post updatePost(Post post) throws SQLException {
+        Post res = this.update(post);
+        return res;
+    }
+
 
     public PostDTO deletePost(PostDTO postDTO) throws SQLException {
         // Borramos el post
@@ -152,5 +162,9 @@ public class PostService extends BaseService<Post, ObjectId, PostRepository> {
 
     public Set<Post> getUserPosts(ObjectId userId) {
         return new HashSet(repository.getByUserId(userId));
+    }
+
+    public Post getMyPostByID(ObjectId idPost) throws SQLException {
+        return this.getById(idPost);
     }
 }
